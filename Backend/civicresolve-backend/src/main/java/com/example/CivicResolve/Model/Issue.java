@@ -25,6 +25,7 @@ public class Issue {
     private String address;
 
     @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "VARCHAR(255)")
     private Category category;
 
     private String otherCategory;
