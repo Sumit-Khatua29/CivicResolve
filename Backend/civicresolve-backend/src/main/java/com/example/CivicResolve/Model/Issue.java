@@ -17,11 +17,12 @@ public class Issue {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT")
     private String description;
 
+    @Column(length = 500)
     private String address;
 
     @Enumerated(EnumType.STRING)
@@ -31,6 +32,7 @@ public class Issue {
     private String otherCategory;
 
     private Double latitude;
+
     private Double longitude;
 
     private String imagePath;
@@ -39,7 +41,10 @@ public class Issue {
     private IssueStatus status;
 
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
+    private String remark;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -55,6 +60,4 @@ public class Issue {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
-
-
 }

@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Component
 public class JwtUtils {
-
     @Value("${civic.app.jwtSecret}")
     private String jwtSecret;
 

@@ -18,52 +18,58 @@ import java.util.stream.Collectors;
 
 @Service
 public class IssueService {
+
     @Autowired
     private IssueRepository issueRepository;
 
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private FileService fileService;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    public void deleteIssue(Integer id, String username){
+    public void deleteIssue(Integer id, String username) {
         Issue issue = issueRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Issue not Found"));
+                .orElseThrow(() -> new RuntimeException("Issue not found"));
 
         if (!issue.getUser().getUsername().equals(username) &&
-            !userRepository.findByUsername(username).get().getRole().name().equals("ROLE_ADMIN")){
+                !userRepository.findByUsername(username).get().getRole().name().equals("ROLE_ADMIN")) {
             throw new RuntimeException("You are not authorized to delete this issue");
         }
 
         issueRepository.delete(issue);
     }
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private FileService fileService;
+
     public IssueResponse createIssue(String description, String address, Category category, String otherCategory, Double latitude, Double longitude, MultipartFile image, String username) {
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        String fileName = fileService.storeFile(image);
-
-        // Generate file download URI
-        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/issues/image/")
-                .path(fileName)
-                .toUriString();
-
         Issue issue = new Issue();
         issue.setDescription(description);
         issue.setAddress(address);
+
+        if (image != null && !image.isEmpty()) {
+            String fileName = fileService.storeFile(image);
+
+            // Generate file download URI
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/issues/image/")
+                    .path(fileName)
+                    .toUriString();
+            issue.setImagePath(fileDownloadUri);
+        } else {
+            issue.setImagePath(null);
+        }
+
         issue.setCategory(category);
         if(category == Category.OTHER) {
             issue.setOtherCategory(otherCategory);
         }
         issue.setLatitude(latitude);
         issue.setLongitude(longitude);
-        issue.setImagePath(fileDownloadUri);
         issue.setUser(user);
 
         Issue savedIssue = issueRepository.save(issue);
@@ -114,13 +120,37 @@ public class IssueService {
         return mapToResponse(issue);
     }
 
-    public IssueResponse updateIssueStatus(Integer id, IssueStatus status) {
+
+
+
+    public IssueResponse updateIssueStatus(Integer id, IssueStatus status, String remark) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
         issue.setStatus(status);
+        if (remark != null) {
+            issue.setRemark(remark);
+        }
         Issue savedIssue = issueRepository.save(issue);
 
-        // Send notification
-        notificationService.sendStatusUpdateEmail(savedIssue.getUser().getEmail(), savedIssue.getId(), status.name());
+        System.out.println("Updating status to: " + status);
+        if (status == IssueStatus.RESOLVED) {
+            String userEmail = issue.getUser().getEmail();
+            String description = issue.getDescription();
+            // Run asynchronously or handle exceptions so it doesn't block/fail the request
+            try {
+                emailService.sendIssueSolvedEmail(userEmail, description, issue.getId());
+            } catch (Exception e) {
+                // Log error but don't fail the request
+                System.err.println("Failed to send email: " + e.getMessage());
+            }
+        } else if (status == IssueStatus.REJECTED) {
+            String userEmail = issue.getUser().getEmail();
+            String description = issue.getDescription();
+            try {
+                emailService.sendIssueRejectedEmail(userEmail, description, issue.getId(), remark);
+            } catch (Exception e) {
+                System.err.println("Failed to send rejection email: " + e.getMessage());
+            }
+        }
 
         return mapToResponse(savedIssue);
     }
@@ -138,6 +168,8 @@ public class IssueService {
         response.setStatus(issue.getStatus());
         response.setCreatedAt(issue.getCreatedAt());
         response.setReportedBy(issue.getUser().getUsername());
+        response.setRemark(issue.getRemark());
+        response.setUpdatedAt(issue.getUpdatedAt());
         return response;
     }
 }

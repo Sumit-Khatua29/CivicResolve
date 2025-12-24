@@ -2,6 +2,7 @@ package com.example.CivicResolve.controller;
 
 
 import com.example.CivicResolve.Model.Users;
+import com.example.CivicResolve.dto.UserProfileResponse;
 import com.example.CivicResolve.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,22 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<Users>> getAllUsers() {
         return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @GetMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserProfileResponse> getProfile(java.security.Principal principal) {
+        Users user = userRepository.findByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        return ResponseEntity.ok(new UserProfileResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFullName(),
+                user.getPhoneNumber(),
+                user.getAddress(),
+                user.getRole().name()
+        ));
     }
 
     @PutMapping("/{id}/block")

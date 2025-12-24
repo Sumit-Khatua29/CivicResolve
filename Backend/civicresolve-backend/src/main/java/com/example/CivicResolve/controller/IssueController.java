@@ -89,8 +89,9 @@ public class IssueController {
 
     @PutMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<IssueResponse> updateStatus(@PathVariable Integer id, @RequestParam IssueStatus status) {
-        return ResponseEntity.ok(issueService.updateIssueStatus(id, status));
+    public ResponseEntity<IssueResponse> updateStatus(@PathVariable Integer id, @RequestParam IssueStatus status, @RequestParam(required = false) String remark) {
+        System.out.println("Update Status Request - ID: " + id + ", Status: " + status + ", Remark: " + remark);
+        return ResponseEntity.ok(issueService.updateIssueStatus(id, status, remark));
     }
 
     @GetMapping("/image/{fileName:.+}")

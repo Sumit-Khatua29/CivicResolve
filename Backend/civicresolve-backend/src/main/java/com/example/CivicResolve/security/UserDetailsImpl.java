@@ -16,7 +16,6 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
-
     private static final long serialVersionUID = 1L;
 
     private Integer id;
@@ -42,7 +41,6 @@ public class UserDetailsImpl implements UserDetails {
                 user.isEnabled(),
                 authorities);
     }
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -80,12 +78,13 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public boolean equals(Object o){
+    public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-        UserDetailsImpl user = (UserDetailsImpl)  o;
+        UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
     }
 }
+

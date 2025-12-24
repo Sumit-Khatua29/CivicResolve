@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class IssueResponse {
-    private Integer id;
+    private Long id;
     private String description;
     private String address;
     private Category category;
@@ -19,4 +19,6 @@ public class IssueResponse {
     private IssueStatus status;
     private LocalDateTime createdAt;
     private String reportedBy;
+    private String remark;
+    private LocalDateTime updatedAt;
 }

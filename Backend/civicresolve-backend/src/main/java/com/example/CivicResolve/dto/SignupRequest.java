@@ -21,6 +21,10 @@ public class SignupRequest {
     private Role role;
 
     @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 12)
     private String password;
+
+    private String captchaId;
+
+    private String captchaAnswer;
 }

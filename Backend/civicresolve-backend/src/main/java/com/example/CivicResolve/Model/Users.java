@@ -27,5 +27,9 @@ public class Users {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String fullName;
+    private String phoneNumber;
+    private String address;
+
     private boolean enabled = true;
 }
