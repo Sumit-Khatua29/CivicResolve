@@ -51,6 +51,7 @@ public class EmailService {
 
     public void sendIssueRejectedEmail(String toEmail, String issueDescription, Long issueId, String remark) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("civicresolve5@gmail.com");
         message.setTo(toEmail);
         message.setSubject("Update on Your Reported Issue - Civic Resolve");
         message.setText("Dear Citizen,\n\n" +
