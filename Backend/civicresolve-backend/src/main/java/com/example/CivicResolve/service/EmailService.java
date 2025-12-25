@@ -13,6 +13,7 @@ public class EmailService {
 
     public void sendIssueSolvedEmail(String toEmail, String issueDescription, Long issueId) {
         SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("civicresolve5@gmail.com");
         message.setTo(toEmail);
         message.setSubject("Civic Issue Resolved - We Value Your Feedback");
         message.setText("Dear Citizen,\n\n" +
