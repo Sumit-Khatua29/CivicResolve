@@ -45,7 +45,7 @@ const NavBar = () => {
         expanded={expanded}
         onToggle={setExpanded}
         expand="lg" 
-        className={`navbar-custom py-3 fixed-top transition-all ${scrolled ? 'shadow-sm navbar-scrolled' : 'navbar-transparent'}`}
+        className={`navbar-custom py-2 fixed-top transition-all ${scrolled ? 'shadow-sm navbar-scrolled' : 'navbar-transparent'}`}
     >
       <Container>
         <Navbar.Brand 

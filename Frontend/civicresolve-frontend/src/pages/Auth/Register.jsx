@@ -51,11 +51,7 @@ const Register = () => {
       alert("Registered successfully!");
       navigate("/login");
     } catch (err) {
-      console.error("Registration error full object:", err);
-      if (err.response) {
-          console.error("Registration error data:", err.response.data);
-          console.error("Registration error status:", err.response.status);
-      }
+      console.error("Registration error:", err);
       const errorMsg = err.response?.data?.message || 
                        err.response?.data?.error || 
                        err.message || 

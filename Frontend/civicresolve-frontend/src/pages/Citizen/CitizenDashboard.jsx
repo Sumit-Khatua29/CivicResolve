@@ -158,16 +158,16 @@ const CitizenDashboard = () => {
           <Col xs={12} sm={6} md={3}>
               <StatCard title="Total Reported" count={stats.total} variant="primary" icon={<FaExclamationCircle size={24} />} />
           </Col>
-          <Col xs={6} sm={6} md={2}>
+          <Col xs={12} sm={6} md={2}>
               <StatCard title="Resolved" count={stats.resolved} variant="success" icon={<FaCheckCircle size={24} />} />
           </Col>
-          <Col xs={6} sm={6} md={2}>
-            <StatCard title="Verified" count={stats.verified} variant="info" icon={<FaCheckCircle size={24} />} />
+          <Col xs={12} sm={6} md={2}>
+              <StatCard title="Verified" count={stats.verified} variant="info" icon={<FaCheckCircle size={24} />} />
           </Col>
-          <Col xs={6} sm={6} md={2}>
+          <Col xs={12} sm={6} md={2}>
               <StatCard title="Pending" count={stats.pending} variant="warning" icon={<FaClock size={24} />} />
           </Col>
-          <Col xs={6} sm={6} md={3}>
+          <Col xs={12} sm={6} md={3}>
               <StatCard title="Rejected" count={stats.rejected} variant="danger" icon={<FaTimesCircle size={24} />} />
           </Col>
       </Row>
@@ -257,6 +257,7 @@ const CitizenDashboard = () => {
                 <th className="issue-table-th">Address</th>
                 <th className="issue-table-th">Status</th>
                 <th className="issue-table-th">Date</th>
+                <th className="issue-table-th">Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -305,6 +306,28 @@ const CitizenDashboard = () => {
                 <td>
                     {new Date(issue.createdAt).toLocaleDateString()} <br />
                     <span className="text-xs text-secondary">{new Date(issue.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true})}</span>
+                </td>
+                <td>
+                    <div className="d-flex gap-2">
+                         {issue.status === 'PENDING' ? (
+                            <Link to={`/edit-issue/${issue.id}`} className="btn btn-sm btn-outline-primary" title="Edit Issue">
+                                <FaEdit />
+                            </Link>
+                        ) : (
+                             <Button variant="outline-secondary" size="sm" disabled title="Cannot edit after verification">
+                                <FaEdit />
+                            </Button>
+                        )}
+                        <Button 
+                            variant="outline-danger" 
+                            size="sm" 
+                            onClick={() => handleDelete(issue.id)}
+                            title="Delete Issue"
+                            disabled={['PENDING','VERIFIED', 'IN_PROGRESS'].includes(issue.status)} 
+                        >
+                            <FaTrash />
+                        </Button>
+                    </div>
                 </td>
                 </motion.tr>
             ))}
