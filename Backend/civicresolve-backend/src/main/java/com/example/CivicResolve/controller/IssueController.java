@@ -5,11 +5,9 @@ import com.example.CivicResolve.Model.IssueStatus;
 import com.example.CivicResolve.dto.IssueResponse;
 import com.example.CivicResolve.dto.MessageResponse;
 import com.example.CivicResolve.security.UserDetailsImpl;
-import com.example.CivicResolve.service.FileService;
 import com.example.CivicResolve.service.IssueService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +26,6 @@ public class IssueController {
 
     @Autowired
     private IssueService issueService;
-
-    @Autowired
-    private FileService fileService;
 
     @PostMapping
     @PreAuthorize("hasRole('CITIZEN') or hasRole('ADMIN')")
@@ -94,25 +89,9 @@ public class IssueController {
         return ResponseEntity.ok(issueService.updateIssueStatus(id, status, remark));
     }
 
-    @GetMapping("/image/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        Resource resource = fileService.loadFileAsResource(fileName);
-
-        String contentType = null;
-        try {
-            contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException ex) {
-            // logger.info("Could not determine file type.");
-        }
-
-        if(contentType == null) {
-            contentType = "application/octet-stream";
-        }
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(contentType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
-                .body(resource);
+    @GetMapping("/{id}/image")
+    public ResponseEntity<byte[]> getIssueImage(@PathVariable Integer id) {
+        return issueService.getIssueImage(id);
     }
 }
 

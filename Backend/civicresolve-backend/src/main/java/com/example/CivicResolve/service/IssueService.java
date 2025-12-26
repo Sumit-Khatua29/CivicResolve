@@ -47,9 +47,6 @@ public class IssueService {
     @Autowired
     private EmailService emailService;
 
-    @Autowired
-    private FileService fileService;
-
     public IssueResponse createIssue(String description, String address, Category category, String otherCategory, Double latitude, Double longitude, MultipartFile image, String username) {
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -59,17 +56,15 @@ public class IssueService {
         issue.setAddress(address);
 
         if (image != null && !image.isEmpty()) {
-            String fileName = fileService.storeFile(image);
-
-            // Generate file download URI
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/issues/image/")
-                    .path(fileName)
-                    .toUriString();
-            issue.setImagePath(fileDownloadUri);
-        } else {
-            issue.setImagePath(null);
+            try {
+                issue.setImageData(image.getBytes());
+                issue.setImageType(image.getContentType());
+                issue.setImageName(image.getOriginalFilename());
+            } catch (Exception e) {
+                throw new RuntimeException("Could not store image data", e);
+            }
         }
+
 
         issue.setCategory(category);
         if(category == Category.OTHER) {
@@ -104,12 +99,13 @@ public class IssueService {
         issue.setLongitude(longitude);
 
         if (image != null && !image.isEmpty()) {
-            String fileName = fileService.storeFile(image);
-            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/api/issues/image/")
-                    .path(fileName)
-                    .toUriString();
-            issue.setImagePath(fileDownloadUri);
+            try {
+                issue.setImageData(image.getBytes());
+                issue.setImageType(image.getContentType());
+                issue.setImageName(image.getOriginalFilename());
+            } catch (Exception e) {
+                throw new RuntimeException("Could not store image data", e);
+            }
         }
 
         Issue updatedIssue = issueRepository.save(issue);
@@ -130,9 +126,6 @@ public class IssueService {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
         return mapToResponse(issue);
     }
-
-
-
 
     public IssueResponse updateIssueStatus(Integer id, IssueStatus status, String remark) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
@@ -166,6 +159,19 @@ public class IssueService {
         return mapToResponse(savedIssue);
     }
 
+    public org.springframework.http.ResponseEntity<byte[]> getIssueImage(Integer id) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
+        
+        if (issue.getImageData() == null) {
+            throw new RuntimeException("Image not found for this issue");
+        }
+
+        return org.springframework.http.ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.parseMediaType(issue.getImageType()))
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + issue.getImageName() + "\"")
+                .body(issue.getImageData());
+    }
+
     private IssueResponse mapToResponse(Issue issue) {
         IssueResponse response = new IssueResponse();
         response.setId(issue.getId());
@@ -175,7 +181,16 @@ public class IssueService {
         response.setOtherCategory(issue.getOtherCategory());
         response.setLatitude(issue.getLatitude());
         response.setLongitude(issue.getLongitude());
-        response.setImagePath(issue.getImagePath());
+        if (issue.getImageData() != null) {
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/issues/")
+                    .path(String.valueOf(issue.getId()))
+                    .path("/image")
+                    .toUriString();
+            response.setImagePath(fileDownloadUri);
+        } else {
+            response.setImagePath(null);
+        }
         response.setStatus(issue.getStatus());
         response.setCreatedAt(issue.getCreatedAt());
         response.setReportedBy(issue.getUser().getUsername());

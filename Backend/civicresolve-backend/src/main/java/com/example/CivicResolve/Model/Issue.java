@@ -35,7 +35,13 @@ public class Issue {
 
     private Double longitude;
 
-    private String imagePath;
+    @Lob
+    @Column(name = "image_data", columnDefinition = "LONGBLOB")
+    private byte[] imageData;
+
+    private String imageType;
+
+    private String imageName;
 
     @Enumerated(EnumType.STRING)
     private IssueStatus status;
