@@ -11,6 +11,9 @@ import java.util.List;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Integer> {
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user"})
+    List<Issue> findAll();
+
     List<Issue> findByUser(Users user);
 
     @Query("Select new com.example.CivicResolve.dto.CategoryCount(i.category, COUNT(i)) from Issue i group by i.category")

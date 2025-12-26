@@ -34,6 +34,13 @@ public class IssueService {
             throw new RuntimeException("You are not authorized to delete this issue");
         }
 
+        // Citizens cannot delete issues that are being processed
+        if (!userRepository.findByUsername(username).get().getRole().name().equals("ROLE_ADMIN")) {
+            if (issue.getStatus() == IssueStatus.VERIFIED || issue.getStatus() == IssueStatus.IN_PROGRESS) {
+                throw new RuntimeException("Cannot delete issue while it is under review or in progress.");
+            }
+        }
+
         issueRepository.delete(issue);
     }
 
@@ -84,6 +91,10 @@ public class IssueService {
         if (!issue.getUser().getUsername().equals(username) &&
                 !userRepository.findByUsername(username).get().getRole().name().equals("ROLE_ADMIN")) {
             throw new RuntimeException("You are not authorized to update this issue");
+        }
+
+        if (issue.getStatus() != IssueStatus.PENDING) {
+            throw new RuntimeException("Issues can only be edited before they are verified.");
         }
 
         issue.setDescription(description);

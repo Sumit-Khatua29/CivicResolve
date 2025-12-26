@@ -11,7 +11,9 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    @org.springframework.scheduling.annotation.Async
     public void sendIssueSolvedEmail(String toEmail, String issueDescription, Long issueId) {
+        System.out.println("EmailService: sendIssueSolvedEmail running in thread: " + Thread.currentThread().getName());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("civicresolve5@gmail.com");
         message.setTo(toEmail);
@@ -31,6 +33,7 @@ public class EmailService {
 
     @org.springframework.scheduling.annotation.Async
     public void sendWelcomeEmail(String toEmail, String username) {
+        System.out.println("EmailService: sendWelcomeEmail running in thread: " + Thread.currentThread().getName());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("civicresolve5@gmail.com");
         message.setTo(toEmail);
@@ -45,7 +48,10 @@ public class EmailService {
         mailSender.send(message);
         System.out.println("Welcome email sent successfully to: " + toEmail);
     }
+
+    @org.springframework.scheduling.annotation.Async
     public void sendIssueRejectedEmail(String toEmail, String issueDescription, Long issueId, String remark) {
+        System.out.println("EmailService: sendIssueRejectedEmail running in thread: " + Thread.currentThread().getName());
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom("civicresolve5@gmail.com");
         message.setTo(toEmail);

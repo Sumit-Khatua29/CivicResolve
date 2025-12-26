@@ -80,6 +80,9 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        long start = System.currentTimeMillis();
+        System.out.println("AuthController: registerUser started for " + signUpRequest.getUsername());
+
         if (!captchaService.validateCaptcha(signUpRequest.getCaptchaId(), signUpRequest.getCaptchaAnswer())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid Captcha"));
         }
@@ -124,6 +127,8 @@ public class AuthController {
             // We don't want to fail registration if email fails, so we just log it
         }
 
+        long duration = System.currentTimeMillis() - start;
+        System.out.println("AuthController: registerUser completed in " + duration + "ms");
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 
