@@ -47,6 +47,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                     System.out.println("AuthTokenFilter: JWT validation failed.");
                 }
             } else {
+                
                 System.out.println("AuthTokenFilter: No JWT found in header.");
             }
         } catch (Exception e) {

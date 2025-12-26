@@ -28,7 +28,7 @@ const Register = () => {
   const fetchCaptcha = async () => {
     try {
         const response = await getCaptcha();
-        setCaptchaId(response.data.hiddenId);
+        setCaptchaId(response.data.id);
         setCaptchaQuestion(response.data.question);
         setCaptchaAnswer(""); 
     } catch (err) {
@@ -51,7 +51,11 @@ const Register = () => {
       alert("Registered successfully!");
       navigate("/login");
     } catch (err) {
-      console.error("Registration error:", err);
+      console.error("Registration error full object:", err);
+      if (err.response) {
+          console.error("Registration error data:", err.response.data);
+          console.error("Registration error status:", err.response.status);
+      }
       const errorMsg = err.response?.data?.message || 
                        err.response?.data?.error || 
                        err.message || 
