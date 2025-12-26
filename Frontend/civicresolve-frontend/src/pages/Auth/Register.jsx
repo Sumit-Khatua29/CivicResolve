@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Form, Button, Container, Alert, Card, InputGroup, Row, Col } from "react-bootstrap";
 import { AuthContext } from "../../context/AuthContext";
-import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUserShield } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaUserShield, FaSync } from "react-icons/fa";
 import { motion } from "framer-motion";
 import bgImage from "../../assets/civic_background.png";
 import "./Register.css";
@@ -14,9 +14,28 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [role, setRole] = useState("citizen");
+  const [captchaId, setCaptchaId] = useState("");
+  const [captchaQuestion, setCaptchaQuestion] = useState("");
+  const [captchaAnswer, setCaptchaAnswer] = useState("");
   const [error, setError] = useState("");
-  const { register } = useContext(AuthContext);
+  const { register, getCaptcha } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  React.useEffect(() => {
+    fetchCaptcha();
+  }, []);
+
+  const fetchCaptcha = async () => {
+    try {
+        const response = await getCaptcha();
+        setCaptchaId(response.data.hiddenId);
+        setCaptchaQuestion(response.data.question);
+        setCaptchaAnswer(""); 
+    } catch (err) {
+        console.error("Failed to load captcha", err);
+        setError("Failed to load captcha service");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,7 +47,7 @@ const Register = () => {
     }
 
     try {
-      await register(username, email, password, role === "admin" ? "ROLE_ADMIN" : "ROLE_CITIZEN");
+      await register(username, email, password, role === "admin" ? "ROLE_ADMIN" : "ROLE_CITIZEN", captchaId, captchaAnswer);
       alert("Registered successfully!");
       navigate("/login");
     } catch (err) {
@@ -171,6 +190,26 @@ const Register = () => {
                                     <option value="admin">Admin (Manage Issues)</option>
                                 </Form.Select>
                             </InputGroup>
+                        </Form.Group>
+
+                        <Form.Group className="mb-4">
+                            <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">Security Check</Form.Label>
+                            <div className="d-flex align-items-center mb-2">
+                                <div className="bg-white px-3 py-2 rounded border flex-grow-1 text-center fw-bold letter-spacing-1">
+                                    {captchaQuestion || "Loading..."}
+                                </div>
+                                <Button variant="light" className="ms-2 border" onClick={fetchCaptcha}>
+                                    <FaSync className="text-muted" />
+                                </Button>
+                            </div>
+                            <Form.Control
+                                type="text"
+                                placeholder="Enter the result"
+                                value={captchaAnswer}
+                                onChange={(e) => setCaptchaAnswer(e.target.value)}
+                                required
+                                className="py-2 bg-light auth-input-control"
+                            />
                         </Form.Group>
 
                         <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>

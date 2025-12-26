@@ -16,7 +16,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-import axios from "axios";
+import api from "../../services/api";
 import "./AnalyticsDashboard.css";
 
 ChartJS.register(
@@ -62,10 +62,7 @@ const AnalyticsDashboard = () => {
 
     const fetchCategoryData = async () => {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const response = await axios.get("http://localhost:8080/api/analytics/categories", {
-                 headers: { Authorization: "Bearer " + user.token }
-            });
+            const response = await api.get("/analytics/categories");
             const data = response.data;
             setCategoryData({
                 labels: data.map(item => item.category),
@@ -88,10 +85,7 @@ const AnalyticsDashboard = () => {
 
     const fetchLocationData = async () => {
         try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            const response = await axios.get("http://localhost:8080/api/analytics/locations", {
-                 headers: { Authorization: "Bearer " + user.token }
-            });
+            const response = await api.get("/analytics/locations");
             // Map to [lat, lng, intensity] format for react-leaflet-heatmap-layer-v3
             const data = response.data
                 .filter(loc => loc.latitude && loc.longitude)

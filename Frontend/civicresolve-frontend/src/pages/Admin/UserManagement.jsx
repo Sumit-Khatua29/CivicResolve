@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Container, Table, Button, Badge, Alert } from "react-bootstrap";
-import axios from "axios";
+import api from "../../services/api";
 import { motion } from "framer-motion";
 import { FaUserCheck, FaUserSlash, FaUserCog } from "react-icons/fa";
 import "./UserManagement.css";
@@ -15,10 +15,7 @@ const UserManagement = () => {
 
   const fetchUsers = async () => {
     try {
-      const user = JSON.parse(localStorage.getItem("user"));
-      const response = await axios.get("http://localhost:8080/api/users", {
-        headers: { Authorization: "Bearer " + user.token },
-      });
+      const response = await api.get("/users");
       setUsers(response.data);
     } catch (error) {
       setError("Failed to fetch users.");
@@ -28,14 +25,11 @@ const UserManagement = () => {
 
   const toggleUserStatus = async (userId, currentStatus) => {
       try {
-          const user = JSON.parse(localStorage.getItem("user"));
           const endpoint = currentStatus 
-            ? `http://localhost:8080/api/users/${userId}/block` 
-            : `http://localhost:8080/api/users/${userId}/enable`;
+            ? `/users/${userId}/block` 
+            : `/users/${userId}/enable`;
             
-          await axios.put(endpoint, {}, {
-            headers: { Authorization: "Bearer " + user.token },
-          });
+          await api.put(endpoint);
           
           fetchUsers();
       } catch (error) {

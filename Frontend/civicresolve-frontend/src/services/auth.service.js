@@ -1,12 +1,18 @@
 import api from "./api";
 
-const register = (username, email, password, role) => {
+const register = (username, email, password, role, captchaId, captchaAnswer) => {
   return api.post("/auth/signup", {
     username,
     email,
     password,
     role,
+    captchaId,
+    captchaAnswer
   });
+};
+
+const getCaptcha = () => {
+    return api.get("/auth/captcha");
 };
 
 const login = (username, password) => {
@@ -49,7 +55,9 @@ const AuthService = {
   login,
   googleLogin,
   logout,
+  logout,
   getCurrentUser,
+  getCaptcha,
 };
 
 export default AuthService;

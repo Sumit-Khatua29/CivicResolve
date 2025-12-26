@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FaStar } from 'react-icons/fa';
-import axios from 'axios';
+import api from '../services/api';
 import "./Feedback.css";
 
 const Feedback = () => {
@@ -23,7 +23,7 @@ const Feedback = () => {
         }
 
         try {
-            await axios.post('http://localhost:8080/api/feedback', {
+            await api.post('/feedback', {
                 issueId: issueId,
                 rating: rating,
                 comment: comment

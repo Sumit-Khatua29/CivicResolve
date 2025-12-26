@@ -37,12 +37,16 @@ const googleLogin = async (token) => {
     setCurrentUser(undefined);
   };
 
-  const register = async (username, email, password, role) => {
-    return AuthService.register(username, email, password, role);
+  const register = async (username, email, password, role, captchaId, captchaAnswer) => {
+    return AuthService.register(username, email, password, role, captchaId, captchaAnswer);
   };
 
+  const getCaptcha = () => {
+      return AuthService.getCaptcha();
+  }
+
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, register, googleLogin }}>
+    <AuthContext.Provider value={{ currentUser, login, logout, register, googleLogin, getCaptcha }}>
       {children}
     </AuthContext.Provider>
   );
