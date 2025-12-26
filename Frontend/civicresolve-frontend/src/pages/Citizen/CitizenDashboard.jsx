@@ -178,13 +178,13 @@ const CitizenDashboard = () => {
         <div>
             <Button 
                 variant="outline-primary" 
-                className="me-2"
+                className="me-3 btn-premium-outline"
                 onClick={() => setShowMap(!showMap)}
             >
                 {showMap ? <><FaList className="me-2"/> Hide Map</> : <><FaMapMarkedAlt className="me-2"/> Show Map</>}
             </Button>
             <Link to="/report-issue">
-                <Button variant="success" className="btn-primary-custom">Report New Issue</Button>
+                <Button variant="primary" className="btn-premium">Report New Issue</Button>
             </Link>
         </div>
       </div>

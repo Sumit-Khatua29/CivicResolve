@@ -73,3 +73,61 @@
 .popup-content {
     max-width: 200px;
 }
+
+/* Modern Action Buttons */
+.btn-premium {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px; /* Pill shape */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-premium:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+    color: white;
+}
+
+.btn-premium:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(118, 75, 162, 0.3);
+}
+
+.btn-premium-outline {
+    background: transparent;
+    border: 2px solid #764ba2;
+    color: #764ba2;
+    padding: 0.5rem 1.4rem; /* Compensate for border */
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-premium-outline:hover {
+    background: rgba(118, 75, 162, 0.05); /* Very subtle tint */
+    color: #5e3a8c;
+    border-color: #5e3a8c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.15);
+}
+
+/* Add specialized icons styles if needed */
+.btn-premium svg, .btn-premium-outline svg {
+    margin-right: 8px;
+    font-size: 1.1em;
+}

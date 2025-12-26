@@ -106,21 +106,21 @@ const AnalyticsDashboard = () => {
                </div>
             </div>
 
-            <Row>
-                <Col md={6} className="mb-4">
+            <Row className="g-4"> 
+                <Col lg={6} className="mb-4">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
                         className="h-100"
                     >
-                        <Card className="glass-card border-0 h-100">
-                            <Card.Body>
+                        <Card className="analytics-card-modern border-0 h-100">
+                            <Card.Body className="p-4">
                                 <div className="d-flex align-items-center mb-4">
-                                    <div className="p-2 bg-light rounded-circle me-3 text-primary">
-                                        <FaChartBar size={20} />
+                                    <div className="icon-wrapper-modern blue me-3 shadow-sm">
+                                        <FaChartBar size={22} />
                                     </div>
-                                    <h5 className="mb-0 card-title fw-bold">Issues by Category</h5>
+                                    <h5 className="mb-0 card-title analytics-card-title">Issues by Category</h5>
                                 </div>
                                 <div className="analytics-chart-container">
                                     <Bar 
@@ -128,11 +128,32 @@ const AnalyticsDashboard = () => {
                                             responsive: true, 
                                             maintainAspectRatio: false,
                                             plugins: {
-                                                legend: { display: false }
+                                                legend: { display: false },
+                                                tooltip: {
+                                                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                                                    titleColor: '#1e293b',
+                                                    bodyColor: '#475569',
+                                                    borderColor: 'rgba(226, 232, 240, 1)',
+                                                    borderWidth: 1,
+                                                    padding: 12,
+                                                    displayColors: false,
+                                                    callbacks: {
+                                                        label: function(context) {
+                                                            return context.parsed.y + ' Issues';
+                                                        }
+                                                    }
+                                                }
                                             },
                                             scales: {
-                                                y: { grid: { display: false }, beginAtZero: true },
-                                                x: { grid: { display: false } } 
+                                                y: { 
+                                                    grid: { display: true, borderDash: [4, 4], color: '#f1f5f9' }, 
+                                                    beginAtZero: true,
+                                                    ticks: { font: { family: "'Inter', sans-serif", size: 12 }, color: '#94a3b8' }
+                                                },
+                                                x: { 
+                                                    grid: { display: false },
+                                                    ticks: { font: { family: "'Inter', sans-serif", size: 12 }, color: '#64748b' }
+                                                } 
                                             }
                                         }} 
                                         data={categoryData} 
@@ -142,25 +163,25 @@ const AnalyticsDashboard = () => {
                         </Card>
                     </motion.div>
                 </Col>
-                <Col md={6} className="mb-4">
+                <Col lg={6} className="mb-4">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.5, delay: 0.2 }}
+                        transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
                          className="h-100"
                     >
-                        <Card className="glass-card border-0 h-100 p-0 overflow-hidden">
-                             <div className="p-4 d-flex align-items-center">
-                                    <div className="p-2 bg-light rounded-circle me-3 text-success">
-                                        <FaMapMarkedAlt size={20} />
+                        <Card className="analytics-card-modern border-0 h-100 p-0">
+                             <div className="p-4 d-flex align-items-center border-bottom border-light">
+                                    <div className="icon-wrapper-modern green me-3 shadow-sm">
+                                        <FaMapMarkedAlt size={22} />
                                     </div>
-                                    <h5 className="mb-0 card-title fw-bold">Issue Heatmap</h5>
+                                    <h5 className="mb-0 card-title analytics-card-title">Geographic Heatmap</h5>
                              </div>
                             <Card.Body className="p-0 position-relative analytics-map-card-body">
                                 <div className="w-100 h-100 map-view-container">
-                                    <MapContainer center={defaultCenter} zoom={5} className="analytics-map-container">
+                                    <MapContainer center={defaultCenter} zoom={5} className="analytics-map-container" scrollWheelZoom={false}>
                                         <TileLayer
-                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                         />
                                         <MapBounds points={heatmapData} />
@@ -173,8 +194,9 @@ const AnalyticsDashboard = () => {
                                                 latitudeExtractor={m => m[0]}
                                                 intensityExtractor={m => parseFloat(m[2])}
                                                 radius={30}
-                                                max={5} // Adjust based on data density
+                                                max={5} 
                                                 minOpacity={0.4}
+                                                gradient={{0.4: 'blue', 0.65: 'lime', 1: 'red'}}
                                             />
                                         )}
                                     </MapContainer>

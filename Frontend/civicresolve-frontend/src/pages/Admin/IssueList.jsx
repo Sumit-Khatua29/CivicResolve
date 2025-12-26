@@ -91,12 +91,12 @@ const IssueList = () => {
   return (
     <div className="glass-card">
       <div className="d-flex justify-content-between align-items-center mb-4">
-          <h4 className="mb-0 fw-bold">Recent Issues</h4>
+          <h4 className="mb-0 fw-bold bg-gradient-primary-to-secondary text-transparent bg-clip-text">Recent Issues</h4>
           <Dropdown>
-              <Dropdown.Toggle variant="light" id="filter-dropdown" className="d-flex align-items-center border shadow-sm">
+              <Dropdown.Toggle variant="light" id="filter-dropdown" className="filter-dropdown-toggle">
                   <FaFilter className="me-2 text-primary" /> Filter: {filter}
               </Dropdown.Toggle>
-              <Dropdown.Menu>
+              <Dropdown.Menu className="shadow-lg border-0 rounded-4 mt-2">
                   <Dropdown.Item onClick={() => setFilter('ALL')}>All</Dropdown.Item>
                   <Dropdown.Item onClick={() => setFilter('PENDING')}>Pending</Dropdown.Item>
                   <Dropdown.Item onClick={() => setFilter('VERIFIED')}>Verified</Dropdown.Item>
@@ -110,17 +110,17 @@ const IssueList = () => {
       {error && <Alert variant="danger">{error}</Alert>}
       
       <div className="table-responsive">
-        <Table className="table-premium align-middle">
-            <thead className="bg-light">
+        <Table className="table-premium align-middle mb-0">
+            <thead>
             <tr>
-                <th className="issue-col-width">ID</th>
+                <th className="issue-col-width ps-4">ID</th>
                 <th className="issue-col-width">Description</th>
                 <th className="issue-col-width">Category</th>
                 <th className="issue-col-width">Address</th>
                 <th className="issue-col-width">Reported By</th>
                 <th className="issue-col-width">Status</th>
                 <th className="issue-col-width">Date</th>
-                <th className="issue-col-width">Action</th>
+                <th className="issue-col-width pe-4">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -131,7 +131,7 @@ const IssueList = () => {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05 }}
                 >
-                <td className="fw-bold text-secondary">#{issue.id}</td>
+                <td className="fw-bold text-secondary ps-4">#{issue.id}</td>
                 <td>
                     <div className="d-flex flex-column">
                         <span className="issue-description">{issue.description}</span>
@@ -143,7 +143,7 @@ const IssueList = () => {
                     </div>
                 </td>
                 <td>
-                    <Badge bg="light" text="dark" className="border">
+                    <Badge bg="light" text="dark" className="border shadow-sm">
                         {issue.category === 'OTHER' && issue.otherCategory ? issue.otherCategory : issue.category}
                     </Badge>
                 </td>
@@ -152,10 +152,10 @@ const IssueList = () => {
                 </td>
                 <td>
                     <div className="d-flex align-items-center">
-                        <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2 issue-avatar">
+                        <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2 issue-avatar shadow-sm">
                             {issue.reportedBy?.charAt(0).toUpperCase()}
                         </div>
-                        {issue.reportedBy}
+                        <span className="fw-medium text-dark">{issue.reportedBy}</span>
                     </div>
                 </td>
                 <td>{getStatusBadge(issue.status)}</td>
@@ -163,13 +163,13 @@ const IssueList = () => {
                     {new Date(issue.createdAt).toLocaleDateString()} <br />
                     <span className="text-xs text-secondary">{new Date(issue.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true})}</span>
                 </td>
-                <td>
+                <td className="pe-4">
                     <Dropdown drop="start">
                         <Dropdown.Toggle size="sm" variant="white" className="btn-icon" disabled={issue.status === 'RESOLVED'}>
                            •••
                         </Dropdown.Toggle>
 
-                        <Dropdown.Menu className="shadow border-0">
+                        <Dropdown.Menu className="shadow border-0 rounded-3">
                             <Dropdown.Header>Change Status</Dropdown.Header>
                             <Dropdown.Item 
                                 onClick={() => openStatusModal(issue.id, "VERIFIED")}
@@ -204,8 +204,10 @@ const IssueList = () => {
             ))}
             {filteredIssues.length === 0 && (
                 <tr>
-                    <td colSpan="7" className="text-center py-5 text-muted">
-                        No issues found matching criteria.
+                    <td colSpan="8" className="text-center py-5">
+                        <div className="empty-state-message py-4 mx-auto w-50">
+                            <p className="mb-0 text-muted fw-bold">No issues found matching criteria.</p>
+                        </div>
                     </td>
                 </tr>
             )}
