@@ -1,0 +1,22 @@
+.admin-home-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+    padding-top: 100px;
+}
+
+.admin-home-recent-card {
+    min-height: 300px;
+}
+
+.admin-home-empty-icon {
+    opacity: 0.3;
+}
+
+.home-stat-icon-wrapper {
+    width: 60px;
+    height: 60px;
+}
+
+.action-card {
+    min-height: 140px;
+}

@@ -1,0 +1,32 @@
+.admin-auth-container {
+    background-image: url('../../assets/civic_background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-auth-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(30, 0, 30, 0.8);
+    backdrop-filter: blur(3px);
+}
+
+.admin-auth-label {
+    letter-spacing: 1px;
+}
+
+.admin-auth-input-control {
+    border-left: none;
+}

@@ -1,0 +1,13 @@
+.analytics-chart-container {
+    height: 300px;
+}
+
+.analytics-map-card-body {
+    min-height: 350px;
+}
+
+.analytics-map-container {
+    height: 100%;
+    width: 100%;
+    min-height: 350px;
+}

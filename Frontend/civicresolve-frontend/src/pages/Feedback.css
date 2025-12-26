@@ -1,0 +1,26 @@
+.feedback-container {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.feedback-card-success {
+    max-width: 500px;
+}
+
+.feedback-success-icon {
+    font-size: 4rem;
+}
+
+.feedback-card-form {
+    max-width: 600px;
+}
+
+.star-input-radio {
+    display: none;
+}
+
+.star-icon {
+    cursor: pointer;
+    transition: color 0.2s;
+    margin: 0 5px;
+}

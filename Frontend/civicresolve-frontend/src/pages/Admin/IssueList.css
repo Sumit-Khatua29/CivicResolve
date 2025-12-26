@@ -1,0 +1,14 @@
+.issue-col-width {
+    width: 12.5%;
+}
+
+.issue-description {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.issue-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8rem;
+}

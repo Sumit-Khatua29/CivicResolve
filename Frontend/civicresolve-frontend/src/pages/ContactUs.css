@@ -1,0 +1,40 @@
+.contact-page {
+    background: #f8f9fa;
+    min-height: 100vh;
+}
+
+.contact-hero-section {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+.contact-lead-text {
+    max-width: 600px;
+}
+
+.contact-icon-wrapper-blue {
+    background-color: #e0f2fe;
+    color: #0284c7;
+}
+
+.contact-icon-wrapper-green {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.contact-icon-wrapper-red {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+.contact-icon-wrapper-purple {
+    background-color: #f3e8ff;
+    color: #9333ea;
+}
+
+.contact-map-container {
+    height: 450px;
+}
+
+.iframe-map {
+    border: 0;
+}
