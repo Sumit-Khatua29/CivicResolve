@@ -1,0 +1,72 @@
+/* Modern Analytics Dashboard Styles */
+
+/* Modern Card Container */
+.analytics-card-modern {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(31, 38, 135, 0.08); /* Softer shadow */
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+}
+
+.analytics-card-modern:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(31, 38, 135, 0.15);
+}
+
+/* Card Titles and Headers */
+.analytics-card-title {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, #1e293b 0%, #475569 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.icon-wrapper-modern {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    transition: transform 0.3s ease;
+}
+
+.icon-wrapper-modern.blue {
+    background: linear-gradient(135deg, rgba(67, 97, 238, 0.1) 0%, rgba(67, 97, 238, 0.05) 100%);
+    color: #4361ee;
+}
+
+.icon-wrapper-modern.green {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+    color: #10b981;
+}
+
+.analytics-card-modern:hover .icon-wrapper-modern {
+    transform: rotate(10deg) scale(1.1);
+}
+
+/* Chart Container */
+.analytics-chart-container {
+    height: 320px;
+    position: relative;
+    padding: 10px;
+}
+
+/* Map specific adjustments */
+.analytics-map-card-body {
+    min-height: 370px;
+    border-radius: 0 0 24px 24px;
+    overflow: hidden;
+}
+
+.analytics-map-container {
+    height: 100%;
+    width: 100%;
+    min-height: 370px;
+    z-index: 1; /* Ensure map stays below other potential overlays */
+}

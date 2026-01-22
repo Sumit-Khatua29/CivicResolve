@@ -1,0 +1,149 @@
+/* Profile Page Container */
+/* Profile Page Container */
+.profile-container {
+    padding-top: 100px;
+    padding-bottom: 100px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+}
+
+@media (max-width: 768px) {
+    .profile-container {
+        padding-top: 80px;
+        padding-bottom: 40px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+/* Loading State */
+.profile-loading-container {
+    min-height: 100vh; /* Make it full screen */
+    background: #f8f9fa;
+}
+
+/* Card Styling - Glassmorphism */
+/* Overriding Bootstrap Card classes via specificity or custom class if added to JSX */
+.profile-container .card {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.profile-container .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.25);
+}
+
+/* Header Gradient */
+.profile-header-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle shine effect to the header */
+.profile-header-gradient::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 100%);
+    animation: shine 6s infinite;
+}
+
+@keyframes shine {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+/* Avatar Wrapper */
+.profile-avatar-wrapper {
+    width: 100px;
+    height: 100px;
+    border: 4px solid rgba(255, 255, 255, 0.8);
+    background: white;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.profile-avatar-wrapper:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.profile-avatar-wrapper svg {
+    color: #764ba2 !important; /* Match gradient end color */
+}
+
+/* Typography Enhancements */
+.profile-container h3 {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    letter-spacing: 0.5px;
+}
+
+.profile-view .text-uppercase {
+    letter-spacing: 1.5px;
+    color: #6c757d;
+    font-size: 0.75rem;
+}
+
+.profile-view .fs-5 {
+    font-weight: 500;
+    color: #2d3748;
+}
+
+/* Form Controls */
+.profile-container .form-control, 
+.profile-container .form-select {
+    border: 2px solid transparent;
+    background-color: #f1f5f9;
+    transition: all 0.2s ease;
+    box-shadow: none;
+}
+
+.profile-container .form-control:focus, 
+.profile-container .form-select:focus {
+    background-color: #fff;
+    border-color: #764ba2; /* Accent color */
+    box-shadow: 0 0 0 4px rgba(118, 75, 162, 0.1);
+}
+
+.profile-container .form-label {
+    margin-bottom: 0.5rem;
+    color: #4a5568;
+    font-weight: 600 !important;
+}
+
+/* Buttons */
+.profile-container .btn-primary {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.profile-container .btn-primary:hover {
+    background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
+}
+
+.profile-container .btn-outline-primary {
+    color: #764ba2;
+    border-color: #764ba2;
+}
+
+.profile-container .btn-outline-primary:hover {
+    background-color: #764ba2;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.3);
+}
+
+.profile-container .btn-outline-secondary:hover {
+    transform: translateY(-2px);
+}

@@ -1,0 +1,11 @@
+.admin-sidebar-container {
+    border-radius: 0;
+}
+
+.admin-sidebar-link {
+    cursor: pointer;
+}
+
+.admin-sidebar-logout {
+    cursor: pointer;
+}

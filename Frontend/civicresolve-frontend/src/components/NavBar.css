@@ -1,0 +1,53 @@
+.navbar-custom {
+    transition: all 0.3s ease-in-out;
+}
+
+.navbar-scrolled {
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.navbar-transparent {
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    backdrop-filter: none;
+    }
+
+.navbar-brand-custom {
+    letter-spacing: -0.5px;
+}
+
+.brand-text-scrolled {
+    color: #0f172a;
+}
+
+.brand-text-transparent {
+    color: #4ade80;
+}
+
+.nav-link-custom {
+    position: relative;
+}
+
+.hover-opacity-100:hover {
+    opacity: 1 !important;
+    transform: translateY(-1px);
+}
+
+.hover-scale {
+    transition: all 0.2s ease;
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.15) !important;
+}
+
+.btn-register-custom {
+    background: linear-gradient(90deg, #10b981, #059669);
+    box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+}
+
+.btn-login-custom {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.5);
+}
