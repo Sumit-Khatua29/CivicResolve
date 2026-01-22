@@ -1,0 +1,74 @@
+.auth-container {
+    background-image: url('../../assets/civic_background.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    padding-top: 120px;
+    padding-bottom: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.auth-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(15, 32, 39, 0.75);
+    backdrop-filter: blur(3px);
+}
+
+.auth-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+}
+
+.auth-gradient-line {
+    height: 6px;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+}
+
+.auth-label {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.auth-input-control {
+    border-left: none;
+}
+
+.auth-password-toggle {
+    font-size: 0.8rem;
+    transition: color 0.2s;
+}
+
+.auth-login-btn {
+    background: linear-gradient(90deg, #3b82f6, #2563eb);
+    font-size: 1rem;
+}
+
+.auth-divider-line {
+    border-color: #e5e7eb;
+}
+
+.auth-google-btn {
+    background: #fff;
+    font-size: 0.95rem;
+    border-color: #e5e7eb;
+}
+
+.form-control:focus {
+    box-shadow: none;
+    border-color: #dee2e6;
+    background-color: #fff !important;
+}
+
+.form-control:focus + .input-group-text, .input-group-text:has(+ .form-control:focus) {
+    background-color: #fff !important;
+    border-color: #dee2e6;
+}

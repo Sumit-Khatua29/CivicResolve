@@ -1,0 +1,19 @@
+.stat-card-container {
+    border-radius: 16px !important;
+    overflow: hidden;
+}
+
+.stat-card-title {
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+}
+
+.stat-card-count {
+    color: #2c3e50;
+}
+
+.stat-card-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}

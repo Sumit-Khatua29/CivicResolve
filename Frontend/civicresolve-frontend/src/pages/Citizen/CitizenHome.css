@@ -1,0 +1,67 @@
+.citizen-home-wrapper {
+    background: #f8f9fa;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+.citizen-welcome-text {
+    font-size: 1.25rem;
+}
+
+.citizen-stat-icon-wrapper {
+    width: 50px;
+    height: 50px;
+}
+
+.action-card {
+    min-height: 80px;
+    border-width: 1px;
+}
+
+.action-card-primary {
+    border-color: #0d6efd;
+}
+.action-card-primary .action-icon, 
+.action-card-primary .action-title {
+    color: #0d6efd;
+}
+
+.action-card-success {
+    border-color: #198754;
+}
+.action-card-success .action-icon, 
+.action-card-success .action-title {
+    color: #198754;
+}
+
+.action-card-info {
+    border-color: #0dcaf0;
+}
+.action-card-info .action-icon, 
+.action-card-info .action-title {
+    color: #0dcaf0;
+}
+
+.recent-reports-card {
+    min-height: 350px;
+}
+
+.status-updates-card {
+    min-height: 150px;
+}
+
+.status-date {
+    font-size: 0.7rem;
+}
+
+.quick-tips-header {
+    font-size: 1rem;
+}
+
+.empty-state-icon {
+    opacity: 0.2;
+}
+
+.empty-update-icon {
+    opacity: 0.3;
+}

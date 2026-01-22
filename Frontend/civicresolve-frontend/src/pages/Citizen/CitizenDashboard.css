@@ -1,0 +1,133 @@
+.citizen-dashboard-container {
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+    .citizen-dashboard-container {
+        padding-top: 80px; /* Reduced for mobile */
+        padding-bottom: 40px;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+.map-view-container {
+    height: 500px;
+}
+
+.map-container-full {
+    height: 100%;
+    width: 100%;
+}
+
+.issue-table-th {
+    width: 14%;
+}
+
+/* Leaflet Marker Styles */
+.marker-pin {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 3px solid #3b82f6;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    background: white;
+    cursor: pointer;
+    position: relative;
+    transition: transform 0.2s ease;
+}
+
+.marker-pin-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    background: white;
+}
+
+.marker-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Cluster Marker Styles */
+.custom-cluster-icon .cluster-marker {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(59, 130, 246, 0.9);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.popup-content {
+    max-width: 200px;
+}
+
+/* Modern Action Buttons */
+.btn-premium {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px; /* Pill shape */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(118, 75, 162, 0.3);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-premium:hover {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(118, 75, 162, 0.4);
+    color: white;
+}
+
+.btn-premium:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 10px rgba(118, 75, 162, 0.3);
+}
+
+.btn-premium-outline {
+    background: transparent;
+    border: 2px solid #764ba2;
+    color: #764ba2;
+    padding: 0.5rem 1.4rem; /* Compensate for border */
+    border-radius: 50px;
+    font-weight: 600;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-premium-outline:hover {
+    background: rgba(118, 75, 162, 0.05); /* Very subtle tint */
+    color: #5e3a8c;
+    border-color: #5e3a8c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(118, 75, 162, 0.15);
+}
+
+/* Add specialized icons styles if needed */
+.btn-premium svg, .btn-premium-outline svg {
+    margin-right: 8px;
+    font-size: 1.1em;
+}
