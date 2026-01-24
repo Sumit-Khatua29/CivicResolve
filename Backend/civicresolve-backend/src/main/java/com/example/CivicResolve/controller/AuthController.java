@@ -228,13 +228,18 @@ public class AuthController {
                 }
             }
 
+            // Check if account is active (specifically for Contractors)
+            if (user.getRole() == Role.ROLE_CONTRACTOR && !user.isEnabled()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Account is pending approval"));
+            }
+
             // Generate JWT
             UserDetailsImpl userDetails = new UserDetailsImpl(
                     user.getId(),
                     user.getUsername(),
                     user.getEmail(),
                     user.getPassword(),
-                    true, // enabled
+                    user.isEnabled(), // Use actual enabled status
                     Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
 
             Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
