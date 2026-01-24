@@ -38,6 +38,9 @@ public class AuthController {
     UserRepository userRepository;
 
     @Autowired
+    private com.example.CivicResolve.repository.ContractorRepository contractorRepository;
+
+    @Autowired
     PasswordEncoder encoder;
 
     @Autowired
@@ -117,17 +120,40 @@ public class AuthController {
             user.setRole(Role.ROLE_CITIZEN);
         }
 
+        // Disable account if Contractor (requires admin approval)
+        if (user.getRole() == Role.ROLE_CONTRACTOR) {
+            user.setEnabled(false);
+        } else {
+            user.setEnabled(true);
+        }
+
         userRepository.save(user);
 
+        if (user.getRole() == Role.ROLE_CONTRACTOR) {
+            com.example.CivicResolve.Model.Contractor contractor = new com.example.CivicResolve.Model.Contractor();
+            contractor.setUser(user);
+            contractor.setAssignedArea(
+                    signUpRequest.getAssignedArea() != null ? signUpRequest.getAssignedArea() : "Unassigned");
+
+            // Save personal details to Contractor table
+            contractor.setFullName(signUpRequest.getFullName());
+            contractor.setPhoneNumber(signUpRequest.getPhoneNumber());
+            contractor.setAddress(signUpRequest.getAddress());
+
+            contractorRepository.save(contractor);
+        }
+
         // Send welcome email
-        try {
+        try
+        {
             emailService.sendWelcomeEmail(user.getEmail(), user.getUsername());
         } catch (Exception e) {
             System.err.println("Failed to send welcome email: " + e.getMessage());
             // We don't want to fail registration if email fails, so we just log it
         }
 
-        long duration = System.currentTimeMillis() - start;
+        long duration = System.currentTimeMillis()
+                - start;
         System.out.println("AuthController: registerUser completed in " + duration + "ms");
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
@@ -144,8 +170,9 @@ public class AuthController {
         HttpEntity<String> entity = new HttpEntity<>("", headers);
 
         try {
-            ResponseEntity<Map> response = restTemplate.exchange(googleUrl, HttpMethod.GET, entity, Map.class);
-            Map<String, Object> userData = (Map<String, Object>) response.getBody();
+            org.springframework.core.ParameterizedTypeReference<Map<String, Object>> typeRef = new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {};
+            ResponseEntity<Map<String, Object>> response = restTemplate.exchange(googleUrl, HttpMethod.GET, entity, typeRef);
+            Map<String, Object> userData = response.getBody();
 
             if (userData == null || userData.get("email") == null) {
                 return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid Google Token"));
@@ -161,7 +188,8 @@ public class AuthController {
                 // Register new user
                 user = new Users();
                 String safeName = (name != null ? name : "user").replaceAll("[^a-zA-Z0-9]", "");
-                if (safeName.isEmpty()) safeName = "user";
+                if (safeName.isEmpty())
+                    safeName = "user";
                 user.setUsername(safeName + "_" + (System.currentTimeMillis() % 10000));
 
                 user.setEmail(email);
@@ -186,7 +214,8 @@ public class AuthController {
                     true, // enabled
                     Collections.singletonList(new SimpleGrantedAuthority(user.getRole().name())));
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null,
+                    userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String jwt = jwtUtils.generateJwtToken(authentication);
@@ -195,7 +224,8 @@ public class AuthController {
                     userDetails.getId(),
                     userDetails.getUsername(),
                     userDetails.getEmail(),
-                    userDetails.getAuthorities().stream().findFirst().map(item -> item.getAuthority()).orElse("ROLE_CITIZEN")));
+                    userDetails.getAuthorities().stream().findFirst().map(item -> item.getAuthority())
+                            .orElse("ROLE_CITIZEN")));
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Google Login Failed: " + e.getMessage()));

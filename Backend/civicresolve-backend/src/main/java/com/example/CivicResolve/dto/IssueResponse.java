@@ -11,6 +11,7 @@ public class IssueResponse {
     private Long id;
     private String description;
     private String address;
+    private String pincode;
     private Category category;
     private String otherCategory;
     private Double latitude;
@@ -21,4 +22,6 @@ public class IssueResponse {
     private String reportedBy;
     private String remark;
     private LocalDateTime updatedAt;
+    private String beforeImagePath;
+    private String afterImagePath;
 }

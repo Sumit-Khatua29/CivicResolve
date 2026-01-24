@@ -1,6 +1,5 @@
 package com.example.CivicResolve.service;
 
-
 import com.example.CivicResolve.Model.Category;
 import com.example.CivicResolve.Model.Issue;
 import com.example.CivicResolve.Model.IssueStatus;
@@ -25,7 +24,13 @@ public class IssueService {
     @Autowired
     private UserRepository userRepository;
 
-    public void deleteIssue(Integer id, String username) {
+    @Autowired
+    private com.example.CivicResolve.repository.ContractorRepository contractorRepository;
+
+    @Autowired
+    private EmailService emailService;
+
+    public void deleteIssue(Long id, String username) {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Issue not found"));
 
@@ -44,16 +49,16 @@ public class IssueService {
         issueRepository.delete(issue);
     }
 
-    @Autowired
-    private EmailService emailService;
-
-    public IssueResponse createIssue(String description, String address, Category category, String otherCategory, Double latitude, Double longitude, MultipartFile image, String username) {
+    public IssueResponse createIssue(String description, String address, String pincode, Category category,
+                                     String otherCategory,
+                                     Double latitude, Double longitude, MultipartFile image, String username) {
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Issue issue = new Issue();
         issue.setDescription(description);
         issue.setAddress(address);
+        issue.setPincode(pincode);
 
         if (image != null && !image.isEmpty()) {
             try {
@@ -65,9 +70,8 @@ public class IssueService {
             }
         }
 
-
         issue.setCategory(category);
-        if(category == Category.OTHER) {
+        if (category == Category.OTHER) {
             issue.setOtherCategory(otherCategory);
         }
         issue.setLatitude(latitude);
@@ -76,10 +80,20 @@ public class IssueService {
 
         Issue savedIssue = issueRepository.save(issue);
 
+        // Send confirmation email asynchronously
+        try {
+            emailService.sendIssueReportedEmail(user.getEmail(), user.getUsername(), issue.getDescription(),
+                    savedIssue.getId(), issue.getImageData(), issue.getImageName());
+        } catch (Exception e) {
+            System.err.println("Failed to send issue reporting email: " + e.getMessage());
+        }
+
         return mapToResponse(savedIssue);
     }
 
-    public IssueResponse updateIssue(Integer id, String description, String address, Category category, Double latitude, Double longitude, MultipartFile image, String username) {
+    public IssueResponse updateIssue(Long id, String description, String address, String pincode, Category category,
+                                     Double latitude,
+                                     Double longitude, MultipartFile image, String username) {
         Issue issue = issueRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Issue not found"));
 
@@ -94,6 +108,7 @@ public class IssueService {
 
         issue.setDescription(description);
         issue.setAddress(address);
+        issue.setPincode(pincode);
         issue.setCategory(category);
         issue.setLatitude(latitude);
         issue.setLongitude(longitude);
@@ -122,31 +137,55 @@ public class IssueService {
         return issueRepository.findByUser(user).stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
-    public IssueResponse getIssueById(Integer id) {
+    public IssueResponse getIssueById(Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
         return mapToResponse(issue);
     }
 
-    public IssueResponse updateIssueStatus(Integer id, IssueStatus status, String remark) {
+    public IssueResponse updateIssueStatus(Long id, IssueStatus status, String remark,
+                                           MultipartFile beforeImage, MultipartFile afterImage) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
         issue.setStatus(status);
         if (remark != null) {
             issue.setRemark(remark);
         }
+
+        if (beforeImage != null && !beforeImage.isEmpty()) {
+            try {
+                issue.setBeforeImageData(beforeImage.getBytes());
+                issue.setBeforeImageType(beforeImage.getContentType());
+                issue.setBeforeImageName(beforeImage.getOriginalFilename());
+            } catch (Exception e) {
+                throw new RuntimeException("Could not store before image data", e);
+            }
+        }
+
+        if (afterImage != null && !afterImage.isEmpty()) {
+            try {
+                issue.setAfterImageData(afterImage.getBytes());
+                issue.setAfterImageType(afterImage.getContentType());
+                issue.setAfterImageName(afterImage.getOriginalFilename());
+            } catch (Exception e) {
+                throw new RuntimeException("Could not store after image data", e);
+            }
+        }
+
         Issue savedIssue = issueRepository.save(issue);
 
         System.out.println("Updating status to: " + status);
         if (status == IssueStatus.RESOLVED) {
             String userEmail = issue.getUser().getEmail();
             String description = issue.getDescription();
-            // Run asynchronously or handle exceptions so it doesn't block/fail the request
+            // Send email to Citizen
             try {
-                emailService.sendIssueSolvedEmail(userEmail, description, issue.getId());
+                emailService.sendIssueResolvedWithImageEmail(userEmail, description, issue.getId(),
+                        issue.getBeforeImageData(), issue.getBeforeImageName(),
+                        issue.getAfterImageData(), issue.getAfterImageName());
             } catch (Exception e) {
-                // Log error but don't fail the request
                 System.err.println("Failed to send email: " + e.getMessage());
             }
         } else if (status == IssueStatus.REJECTED) {
+            // Rejection of the initial issue report
             String userEmail = issue.getUser().getEmail();
             String description = issue.getDescription();
             try {
@@ -154,22 +193,82 @@ public class IssueService {
             } catch (Exception e) {
                 System.err.println("Failed to send rejection email: " + e.getMessage());
             }
+        } else if (status == IssueStatus.IN_PROGRESS && remark != null && issue.getContractor() != null) {
+            // Reassignment / Improvement Request to Contractor (if remark is present)
+            try {
+                // Fetch contractor user to get email
+                com.example.CivicResolve.Model.Users contractorUser = issue.getContractor().getUser();
+                emailService.sendIssueReassignedEmail(contractorUser.getEmail(), contractorUser.getUsername(), issue.getDescription(), issue.getId(), remark);
+            } catch (Exception e) {
+                System.err.println("Failed to send reassignment email: " + e.getMessage());
+            }
         }
 
         return mapToResponse(savedIssue);
     }
 
-    public org.springframework.http.ResponseEntity<byte[]> getIssueImage(Integer id) {
+    public void assignIssueToContractor(Long issueId, Long contractorId) {
+        Issue issue = issueRepository.findById(issueId)
+                .orElseThrow(() -> new RuntimeException("Issue not found"));
+        com.example.CivicResolve.Model.Contractor contractor = contractorRepository.findById(contractorId)
+                .orElseThrow(() -> new RuntimeException("Contractor not found"));
+
+        issue.setContractor(contractor);
+        issue.setStatus(IssueStatus.IN_PROGRESS); // Or VERIFIED depending on flow
+        issueRepository.save(issue);
+    }
+
+    public List<IssueResponse> getContractorIssues(String username) {
+        Users user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        com.example.CivicResolve.Model.Contractor contractor = contractorRepository.findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Contractor profile not found"));
+
+        return issueRepository.findByContractor(contractor).stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    public org.springframework.http.ResponseEntity<byte[]> getIssueImage(Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
-        
+
         if (issue.getImageData() == null) {
             throw new RuntimeException("Image not found for this issue");
         }
 
         return org.springframework.http.ResponseEntity.ok()
                 .contentType(org.springframework.http.MediaType.parseMediaType(issue.getImageType()))
-                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + issue.getImageName() + "\"")
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + issue.getImageName() + "\"")
                 .body(issue.getImageData());
+    }
+
+    public org.springframework.http.ResponseEntity<byte[]> getBeforeIssueImage(Long id) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
+
+        if (issue.getBeforeImageData() == null) {
+            throw new RuntimeException("Before Image not found for this issue");
+        }
+
+        return org.springframework.http.ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.parseMediaType(issue.getBeforeImageType()))
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + issue.getBeforeImageName() + "\"")
+                .body(issue.getBeforeImageData());
+    }
+
+    public org.springframework.http.ResponseEntity<byte[]> getAfterIssueImage(Long id) {
+        Issue issue = issueRepository.findById(id).orElseThrow(() -> new RuntimeException("Issue not found"));
+
+        if (issue.getAfterImageData() == null) {
+            throw new RuntimeException("After Image not found for this issue");
+        }
+
+        return org.springframework.http.ResponseEntity.ok()
+                .contentType(org.springframework.http.MediaType.parseMediaType(issue.getAfterImageType()))
+                .header(org.springframework.http.HttpHeaders.CONTENT_DISPOSITION,
+                        "inline; filename=\"" + issue.getAfterImageName() + "\"")
+                .body(issue.getAfterImageData());
     }
 
     private IssueResponse mapToResponse(Issue issue) {
@@ -177,6 +276,7 @@ public class IssueService {
         response.setId(issue.getId());
         response.setDescription(issue.getDescription());
         response.setAddress(issue.getAddress());
+        response.setPincode(issue.getPincode());
         response.setCategory(issue.getCategory());
         response.setOtherCategory(issue.getOtherCategory());
         response.setLatitude(issue.getLatitude());
@@ -191,11 +291,36 @@ public class IssueService {
         } else {
             response.setImagePath(null);
         }
+        if (issue.getBeforeImageData() != null) {
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/issues/")
+                    .path(String.valueOf(issue.getId()))
+                    .path("/image/before")
+                    .toUriString();
+            response.setBeforeImagePath(fileDownloadUri);
+        } else {
+            response.setBeforeImagePath(null);
+        }
+
+        if (issue.getAfterImageData() != null) {
+            String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                    .path("/api/issues/")
+                    .path(String.valueOf(issue.getId()))
+                    .path("/image/after")
+                    .toUriString();
+            response.setAfterImagePath(fileDownloadUri);
+        } else {
+            response.setAfterImagePath(null);
+        }
+
         response.setStatus(issue.getStatus());
         response.setCreatedAt(issue.getCreatedAt());
         response.setReportedBy(issue.getUser().getUsername());
         response.setRemark(issue.getRemark());
         response.setUpdatedAt(issue.getUpdatedAt());
+        if (issue.getContractor() != null) {
+            // We might want to add contractor info to response, checking DTO first
+        }
         return response;
     }
 }

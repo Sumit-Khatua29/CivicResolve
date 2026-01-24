@@ -1,5 +1,6 @@
 package com.example.CivicResolve.repository;
 
+import com.example.CivicResolve.Model.Contractor;
 import com.example.CivicResolve.Model.Issue;
 import com.example.CivicResolve.Model.Users;
 import com.example.CivicResolve.dto.CategoryCount;
@@ -10,11 +11,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface IssueRepository extends JpaRepository<Issue, Integer> {
+public interface IssueRepository extends JpaRepository<Issue, Long> {
     @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user"})
     List<Issue> findAll();
 
     List<Issue> findByUser(Users user);
+
+    List<Issue> findByContractor(Contractor contractor);
 
     @Query("Select new com.example.CivicResolve.dto.CategoryCount(i.category, COUNT(i)) from Issue i group by i.category")
     List<CategoryCount> countIssuesByCategory();

@@ -3,7 +3,7 @@ package com.example.CivicResolve.security;
 import com.example.CivicResolve.Model.Users;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,7 +13,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-@Data
+@lombok.Getter
+@lombok.Setter
+@lombok.ToString
+@lombok.NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
@@ -85,6 +88,11 @@ public class UserDetailsImpl implements UserDetails {
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
         return Objects.equals(id, user.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 
