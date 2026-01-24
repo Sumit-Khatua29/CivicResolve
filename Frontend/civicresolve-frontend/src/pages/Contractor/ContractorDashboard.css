@@ -1,0 +1,82 @@
+
+.contractor-dashboard-container {
+    padding-top: 3rem !important; /* py-5 */
+    padding-bottom: 3rem !important;
+    margin-top: 3rem !important; /* mt-5 */
+}
+
+.contractor-dashboard-loading {
+    min-height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.contractor-stat-card {
+    border: 0 !important;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important; /* shadow-sm */
+    margin-bottom: 1.5rem !important; /* mb-4 */
+    background-color: white !important;
+}
+
+.contractor-stat-icon-wrapper {
+    border-radius: 50% !important;
+    padding: 1rem !important; /* p-3 */
+    margin-right: 1rem !important; /* me-3 */
+}
+
+/* Icon Variants */
+.icon-primary {
+    background-color: rgba(13, 110, 253, 0.1) !important; /* bg-primary bg-opacity-10 */
+    color: #0d6efd !important; /* text-primary */
+}
+
+.icon-success {
+    background-color: rgba(25, 135, 84, 0.1) !important; /* bg-success bg-opacity-10 */
+    color: #198754 !important; /* text-success */
+}
+
+.contractor-dashboard-title {
+    font-weight: 700 !important; /* fw-bold */
+    color: #212529 !important; /* text-dark */
+}
+
+.contractor-dashboard-card {
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075) !important; /* shadow-sm */
+    border: 0 !important;
+    border-radius: 1rem !important; /* rounded-4 */
+}
+
+.contractor-dashboard-empty-state {
+    text-align: center;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+}
+
+.contractor-dashboard-table-thead {
+    background-color: #f8f9fa !important; /* bg-light */
+}
+
+.contractor-dashboard-th {
+    border: 0 !important;
+    padding-top: 1rem !important; /* py-3 */
+    padding-bottom: 1rem !important;
+}
+
+.contractor-dashboard-td-id {
+    font-weight: 700 !important;
+    padding-left: 1.5rem !important; /* ps-4 */
+}
+
+.contractor-dashboard-upload-container {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem !important;
+    padding: 1rem !important; /* p-3 */
+    text-align: center;
+    background-color: #f8f9fa !important; /* bg-light */
+}
+
+.contractor-dashboard-upload-label {
+    cursor: pointer;
+    display: block;
+}

@@ -29,15 +29,9 @@ public class SignupRequest {
 
     private String assignedArea;
 
-    @NotBlank(message = "Full Name cannot be blank")
-    @Size(min = 3, max = 100, message = "Full Name must be between 3 and 100 characters")
-    @jakarta.validation.constraints.Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Full Name must contain only letters and spaces")
     private String fullName;
 
-    @NotBlank(message = "Phone Number cannot be blank")
-    @jakarta.validation.constraints.Pattern(regexp = "^\\d{10}$", message = "Phone Number must be exactly 10 digits")
     private String phoneNumber;
 
-    @NotBlank(message = "Address cannot be blank")
     private String address;
 }

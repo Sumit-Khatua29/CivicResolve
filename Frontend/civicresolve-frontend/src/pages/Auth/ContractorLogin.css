@@ -1,4 +1,4 @@
-.admin-auth-container {
+.contractor-auth-container {
     background-image: url('../../assets/civic_background.png');
     background-size: cover;
     background-position: center;
@@ -13,20 +13,30 @@
     overflow-y: auto;
 }
 
-.admin-auth-overlay {
+.contractor-auth-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(30, 0, 30, 0.8);
+    background-color: rgba(0, 30, 30, 0.85); /* Dark Teal Tint */
     backdrop-filter: blur(3px);
 }
 
-.admin-auth-label {
+.contractor-auth-label {
     letter-spacing: 1px;
 }
 
-.admin-auth-input-control {
+.contractor-auth-input-control {
     border-left: none;
+}
+
+.contractor-login-form-container {
+    position: relative;
+    z-index: 2;
+    max-width: 400px;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }

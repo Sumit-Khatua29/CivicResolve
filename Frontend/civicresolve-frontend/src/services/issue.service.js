@@ -17,7 +17,7 @@ const updateStatus = (id, status, remark) => {
   return api.put(`/issues/${id}/status`, null, {
     params: {
       status,
-      remark: remark || ""
+      remark: remark || "",
     },
   });
 };
@@ -27,23 +27,33 @@ const getIssueById = (id) => {
 };
 
 const updateIssue = (id, formData) => {
-    return api.put(`/issues/${id}`, formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
+  return api.put(`/issues/${id}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 };
 
 const deleteIssue = (id) => {
   return api.delete(`/issues/${id}`);
 };
 
+const assignIssue = (issueId, contractorId) => {
+  return api.put(`/issues/${issueId}/assign/${contractorId}`);
+};
+
 const getCategories = () => {
-    // Ideally from backend, but hardcoding for now as per Enum
-    // Or if there is an endpoint.
-    // Backend has Category enum: ROADS, GARBAGE, WATER, ELECTRICITY, OTHER
-    return Promise.resolve(["POTHOLE", "GARBAGE", "WATER_LEAKAGE", "STREET_LIGHT", "OTHER"]);
-}
+  // Ideally from backend, but hardcoding for now as per Enum
+  // Or if there is an endpoint.
+  // Backend has Category enum: ROADS, GARBAGE, WATER, ELECTRICITY, OTHER
+  return Promise.resolve([
+    "POTHOLE",
+    "GARBAGE",
+    "WATER_LEAKAGE",
+    "STREET_LIGHT",
+    "OTHER",
+  ]);
+};
 
 const IssueService = {
   createIssue,
@@ -53,7 +63,9 @@ const IssueService = {
   getCategories,
   getIssueById,
   updateIssue,
-  deleteIssue
+  updateIssue,
+  deleteIssue,
+  assignIssue,
 };
 
 export default IssueService;

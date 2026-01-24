@@ -22,7 +22,7 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-const googleLogin = async (token) => {
+  const googleLogin = async (token) => {
     try {
       const data = await AuthService.googleLogin(token);
       setCurrentUser(data);
@@ -37,16 +37,40 @@ const googleLogin = async (token) => {
     setCurrentUser(undefined);
   };
 
-  const register = async (username, email, password, role, captchaId, captchaAnswer) => {
-    return AuthService.register(username, email, password, role, captchaId, captchaAnswer);
+  const register = async (
+    username,
+    email,
+    password,
+    role,
+    captchaId,
+    captchaAnswer,
+    assignedArea,
+    fullName,
+    phoneNumber,
+    address,
+  ) => {
+    return AuthService.register(
+      username,
+      email,
+      password,
+      role,
+      captchaId,
+      captchaAnswer,
+      assignedArea,
+      fullName,
+      phoneNumber,
+      address,
+    );
   };
 
   const getCaptcha = () => {
-      return AuthService.getCaptcha();
-  }
+    return AuthService.getCaptcha();
+  };
 
   return (
-    <AuthContext.Provider value={{ currentUser, login, logout, register, googleLogin, getCaptcha }}>
+    <AuthContext.Provider
+      value={{ currentUser, login, logout, register, googleLogin, getCaptcha }}
+    >
       {children}
     </AuthContext.Provider>
   );

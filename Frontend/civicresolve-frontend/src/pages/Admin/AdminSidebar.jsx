@@ -1,8 +1,15 @@
-import React from 'react';
-import { Nav } from 'react-bootstrap';
-import { motion } from 'framer-motion';
-import { FaChartPie, FaList, FaUsers, FaCog, FaSignOutAlt } from 'react-icons/fa';
-import { useNavigate, useLocation } from 'react-router-dom';
+import React from "react";
+import { Nav } from "react-bootstrap";
+import { motion } from "framer-motion";
+import {
+  FaChartPie,
+  FaList,
+  FaUsers,
+  FaCog,
+  FaSignOutAlt,
+  FaUserClock,
+} from "react-icons/fa";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./AdminSidebar.css";
 
 const AdminSidebar = ({ onLogout, onClose }) => {
@@ -10,23 +17,52 @@ const AdminSidebar = ({ onLogout, onClose }) => {
   const location = useLocation();
 
   const handleNavigation = (path) => {
-      navigate(path);
-      if (onClose) onClose();
+    navigate(path);
+    if (onClose) onClose();
   };
 
   const menuItems = [
-    { id: 'issues', label: 'Issue Management', icon: <FaList />, path: '/admin/issues' },
-    { id: 'analytics', label: 'Analytics', icon: <FaChartPie />, path: '/admin/analytics' },
-    { id: 'users', label: 'User Management', icon: <FaUsers />, path: '/admin/users' },
-    { id: 'settings', label: 'Settings', icon: <FaCog />, path: '/admin/settings' },
+    {
+      id: "issues",
+      label: "Issue Management",
+      icon: <FaList />,
+      path: "/admin/issues",
+    },
+    {
+      id: "approvals",
+      label: "Approvals",
+      icon: <FaUserClock />,
+      path: "/admin/approvals",
+    },
+    {
+      id: "analytics",
+      label: "Analytics",
+      icon: <FaChartPie />,
+      path: "/admin/analytics",
+    },
+    {
+      id: "users",
+      label: "User Management",
+      icon: <FaUsers />,
+      path: "/admin/users",
+    },
+    {
+      id: "settings",
+      label: "Settings",
+      icon: <FaCog />,
+      path: "/admin/settings",
+    },
   ];
 
   // Helper to check active state
   const isPathActive = (path) => {
-      if (path === '/admin/issues' && (location.pathname === '/admin' || location.pathname === '/admin/issues')) {
-          return true;
-      }
-      return location.pathname === path;
+    if (
+      path === "/admin/issues" &&
+      (location.pathname === "/admin" || location.pathname === "/admin/issues")
+    ) {
+      return true;
+    }
+    return location.pathname === path;
   };
 
   return (
@@ -47,9 +83,14 @@ const AdminSidebar = ({ onLogout, onClose }) => {
               className="p-0 border-0 admin-sidebar-link"
             >
               <motion.div
-                className={`d-flex align-items-center px-3 py-3 rounded-3 ${isActive ? 'bg-primary text-white shadow' : 'text-secondary'}`}
-                whileHover={{ x: 5, backgroundColor: isActive ? undefined : 'rgba(67, 97, 238, 0.1)' }}
-                transition={{ type: 'spring', stiffness: 300 }}
+                className={`d-flex align-items-center px-3 py-3 rounded-3 ${isActive ? "bg-primary text-white shadow" : "text-secondary"}`}
+                whileHover={{
+                  x: 5,
+                  backgroundColor: isActive
+                    ? undefined
+                    : "rgba(67, 97, 238, 0.1)",
+                }}
+                transition={{ type: "spring", stiffness: 300 }}
               >
                 <span className="me-3 fs-5">{item.icon}</span>
                 <span className="fw-medium">{item.label}</span>
@@ -60,14 +101,19 @@ const AdminSidebar = ({ onLogout, onClose }) => {
       </Nav>
 
       <div className="mt-auto">
-         <motion.div
-            className="d-flex align-items-center px-3 py-3 rounded-3 text-danger admin-sidebar-logout"
-            whileHover={{ x: 5, backgroundColor: 'rgba(231, 76, 60, 0.1)' }}
-            onClick={() => { onLogout(); if(onClose) onClose(); }}
-          >
-            <span className="me-3 fs-5"><FaSignOutAlt /></span>
-            <span className="fw-medium">Logout</span>
-          </motion.div>
+        <motion.div
+          className="d-flex align-items-center px-3 py-3 rounded-3 text-danger admin-sidebar-logout"
+          whileHover={{ x: 5, backgroundColor: "rgba(231, 76, 60, 0.1)" }}
+          onClick={() => {
+            onLogout();
+            if (onClose) onClose();
+          }}
+        >
+          <span className="me-3 fs-5">
+            <FaSignOutAlt />
+          </span>
+          <span className="fw-medium">Logout</span>
+        </motion.div>
       </div>
     </div>
   );

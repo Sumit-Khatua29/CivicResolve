@@ -86,6 +86,29 @@ public class AuthController {
         long start = System.currentTimeMillis();
         System.out.println("AuthController: registerUser started for " + signUpRequest.getUsername());
 
+        // Manual validation for Contractor fields
+        if (signUpRequest.getRole() == Role.ROLE_CONTRACTOR) {
+            String fullName = signUpRequest.getFullName();
+            if (fullName == null || fullName.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name is required for Contractors"));
+            }
+            if (!fullName.matches("^[a-zA-Z\\s]+$")) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name must contain only letters and spaces"));
+            }
+
+            String phoneNumber = signUpRequest.getPhoneNumber();
+            if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number is required for Contractors"));
+            }
+            if (!phoneNumber.matches("^\\d{10}$")) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number must be exactly 10 digits"));
+            }
+
+            if (signUpRequest.getAddress() == null || signUpRequest.getAddress().trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Error: Address is required for Contractors"));
+            }
+        }
+
         if (!captchaService.validateCaptcha(signUpRequest.getCaptchaId(), signUpRequest.getCaptchaAnswer())) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid Captcha"));
         }

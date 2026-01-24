@@ -21,12 +21,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
-  const { login, googleLogin, logout } = useContext(AuthContext); // Assuming I'll add googleLogin to context, OR I can handle it locally.
-  // actually, let's keep logic in the component for now or add to context.
-  // Context is cleaner. But let's verify if I can edit Context.
-  // Let's stick to local handling or Context.
-  // The user might want consistency.
-  // Let's implement useGoogleLogin here and call a new context method `googleAuthenticate`.
+  const { login, googleLogin, logout } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
@@ -35,11 +30,14 @@ const Login = () => {
       try {
         const user = await googleLogin(tokenResponse.access_token);
         if (user.role === "ROLE_ADMIN") {
-          setError("Access Denied: You are an Admin. Please use Admin Login.");
           logout();
-        } else {
-          navigate("/");
+          setError("Invalid credentials, you are not a citizen");
+          return;
+        } else if (user.role === "ROLE_CONTRACTOR") {
+          navigate("/contractor");
+          return;
         }
+        navigate("/");
       } catch (err) {
         setError("Google Login failed.");
       }
@@ -53,8 +51,11 @@ const Login = () => {
     try {
       const user = await login(username, password);
       if (user.role === "ROLE_ADMIN") {
-        setError("Access Denied: You are an Admin. Please use Admin Login.");
-        logout(); // Ensure they are not kept logged in
+        logout();
+        setError("Invalid credentials, you are not a citizen");
+        return;
+      } else if (user.role === "ROLE_CONTRACTOR") {
+        navigate("/contractor");
       } else {
         navigate("/");
       }
@@ -209,6 +210,13 @@ const Login = () => {
                     className="text-danger fw-bold text-decoration-none"
                   >
                     Admin Login
+                  </Link>
+                  <span className="mx-2">|</span>
+                  <Link
+                    to="/contractor-login"
+                    className="text-info fw-bold text-decoration-none"
+                  >
+                    Contractor Login
                   </Link>
                 </p>
               </div>

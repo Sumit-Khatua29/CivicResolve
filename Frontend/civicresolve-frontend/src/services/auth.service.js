@@ -1,18 +1,33 @@
 import api from "./api";
 
-const register = (username, email, password, role, captchaId, captchaAnswer) => {
+const register = (
+  username,
+  email,
+  password,
+  role,
+  captchaId,
+  captchaAnswer,
+  assignedArea,
+  fullName,
+  phoneNumber,
+  address,
+) => {
   return api.post("/auth/signup", {
     username,
     email,
     password,
     role,
     captchaId,
-    captchaAnswer
+    captchaAnswer,
+    assignedArea,
+    fullName,
+    phoneNumber,
+    address,
   });
 };
 
 const getCaptcha = () => {
-    return api.get("/auth/captcha");
+  return api.get("/auth/captcha");
 };
 
 const login = (username, password) => {
