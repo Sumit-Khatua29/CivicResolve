@@ -182,7 +182,7 @@ public class EmailService {
                     + "\" (ID: " + issueId + ") has been resolved.\n\n" +
                     "Please find the attached images as evidence of the resolution (Before and After work).\n\n" +
                     "We value your feedback. Please let us know if you are satisfied with the work by filling out the feedback form here:\n" +
-                    "https://docs.google.com/forms/d/e/1FAIpQLSdkO1jzt7iyhC6qX23g3JKjla12DHIboMB8D5BOEW93EZZlzA/viewform?usp=sharing&ouid=105140467581029398903\n\n" +
+                    "http://localhost:5173/feedback/" + issueId + "\n\n" +
                     "Sincerely,\n" +
                     "The Civic Resolve Team");
 

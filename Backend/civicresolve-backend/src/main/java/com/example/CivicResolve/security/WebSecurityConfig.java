@@ -69,6 +69,7 @@ public class WebSecurityConfig {
                                 .requestMatchers("/api/issues/*/image/before").permitAll()
                                 .requestMatchers("/api/issues/*/image/after").permitAll()
                                 .requestMatchers("/error").permitAll()
+                                .requestMatchers("/api/feedback/**").permitAll()
                                 .anyRequest().authenticated()
                 );
 
