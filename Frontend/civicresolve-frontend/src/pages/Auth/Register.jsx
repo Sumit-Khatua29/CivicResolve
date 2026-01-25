@@ -19,6 +19,9 @@ import {
   FaEyeSlash,
   FaUserShield,
   FaSync,
+  FaPhone,
+  FaHome,
+  FaKey,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import bgImage from "../../assets/civic_background.png";
@@ -266,62 +269,83 @@ const Register = () => {
                 </Form.Group>
 
                 {role === "contractor" && (
-                  <>
-                    <Form.Group className="mb-3" controlId="formAssignedArea">
-                      <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
-                        Assigned Area (Pincode)
-                      </Form.Label>
+                  <Form.Group className="mb-3" controlId="formAssignedArea">
+                    <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
+                      Assigned Area (Pincode)
+                    </Form.Label>
+                    <InputGroup>
+                      <InputGroup.Text className="bg-light border-end-0 text-primary ps-3">
+                        <FaHome />
+                      </InputGroup.Text>
                       <Form.Control
                         type="text"
                         placeholder="Enter Pincode"
                         value={assignedArea}
                         onChange={(e) => setAssignedArea(e.target.value)}
                         required
-                        className="py-2 bg-light auth-input-control"
+                        className="py-2 border-start-0 bg-light auth-input-control"
                       />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formFullName">
-                      <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
-                        Full Name
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter Full Name"
-                        value={fullName}
-                        onChange={(e) => setFullName(e.target.value)}
-                        required
-                        className="py-2 bg-light auth-input-control"
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-3" controlId="formPhoneNumber">
-                      <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
-                        Phone Number
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter Phone Number"
-                        value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
-                        required
-                        className="py-2 bg-light auth-input-control"
-                      />
-                    </Form.Group>
-                    <Form.Group className="mb-4" controlId="formAddress">
-                      <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
-                        Address
-                      </Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={2}
-                        placeholder="Enter Address"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                        required
-                        className="py-2 bg-light auth-input-control"
-                      />
-                    </Form.Group>
-                  </>
+                    </InputGroup>
+                  </Form.Group>
                 )}
+
+                <Form.Group className="mb-3" controlId="formFullName">
+                  <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
+                    Full Name
+                  </Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text className="bg-light border-end-0 text-primary ps-3">
+                      <FaUser />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Full Name"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      required
+                      className="py-2 border-start-0 bg-light auth-input-control"
+                    />
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formPhoneNumber">
+                  <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
+                    Phone Number
+                  </Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text className="bg-light border-end-0 text-primary ps-3">
+                      <FaPhone />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter Phone Number"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      required
+                      className="py-2 border-start-0 bg-light auth-input-control"
+                    />
+                  </InputGroup>
+                </Form.Group>
+
+                <Form.Group className="mb-4" controlId="formAddress">
+                  <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
+                    Address
+                  </Form.Label>
+                  <InputGroup>
+                    <InputGroup.Text className="bg-light border-end-0 text-primary ps-3">
+                      <FaHome />
+                    </InputGroup.Text>
+                    <Form.Control
+                      as="textarea"
+                      rows={2}
+                      placeholder="Enter Address"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      required
+                      className="py-2 border-start-0 bg-light auth-input-control"
+                    />
+                  </InputGroup>
+                </Form.Group>
 
                 <Form.Group className="mb-4">
                   <Form.Label className="fw-semibold small text-uppercase text-muted auth-label">
@@ -339,14 +363,19 @@ const Register = () => {
                       <FaSync className="text-muted" />
                     </Button>
                   </div>
-                  <Form.Control
-                    type="text"
-                    placeholder="Enter the result"
-                    value={captchaAnswer}
-                    onChange={(e) => setCaptchaAnswer(e.target.value)}
-                    required
-                    className="py-2 bg-light auth-input-control"
-                  />
+                  <InputGroup>
+                    <InputGroup.Text className="bg-light border-end-0 text-primary ps-3">
+                      <FaKey />
+                    </InputGroup.Text>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter the result"
+                      value={captchaAnswer}
+                      onChange={(e) => setCaptchaAnswer(e.target.value)}
+                      required
+                      className="py-2 border-start-0 bg-light auth-input-control"
+                    />
+                  </InputGroup>
                 </Form.Group>
 
                 <motion.div

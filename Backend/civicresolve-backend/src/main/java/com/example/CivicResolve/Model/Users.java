@@ -35,11 +35,15 @@ public class Users {
     @jakarta.validation.constraints.NotNull(message = "Role is required")
     private Role role;
 
+    @jakarta.validation.constraints.NotBlank(message = "Full Name cannot be blank")
+    @jakarta.validation.constraints.Pattern(regexp = "^[a-zA-Z\\s]+$", message = "Full Name must contain only letters and spaces")
     private String fullName;
 
+    @jakarta.validation.constraints.NotBlank(message = "Phone Number cannot be blank")
     @jakarta.validation.constraints.Pattern(regexp = "^\\d{10}$", message = "Phone Number must be exactly 10 digits")
     private String phoneNumber;
 
+    @jakarta.validation.constraints.NotBlank(message = "Address cannot be blank")
     private String address;
 
     private boolean enabled = true;

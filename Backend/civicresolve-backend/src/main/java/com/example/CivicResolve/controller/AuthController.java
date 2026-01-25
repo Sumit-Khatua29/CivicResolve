@@ -87,26 +87,25 @@ public class AuthController {
         System.out.println("AuthController: registerUser started for " + signUpRequest.getUsername());
 
         // Manual validation for Contractor fields
-        if (signUpRequest.getRole() == Role.ROLE_CONTRACTOR) {
-            String fullName = signUpRequest.getFullName();
-            if (fullName == null || fullName.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name is required for Contractors"));
-            }
-            if (!fullName.matches("^[a-zA-Z\\s]+$")) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name must contain only letters and spaces"));
-            }
+        // Validate Full Name, Phone Number, and Address for ALL roles
+        String fullName = signUpRequest.getFullName();
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name is required"));
+        }
+        if (!fullName.matches("^[a-zA-Z\\s]+$")) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Full Name must contain only letters and spaces"));
+        }
 
-            String phoneNumber = signUpRequest.getPhoneNumber();
-            if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number is required for Contractors"));
-            }
-            if (!phoneNumber.matches("^\\d{10}$")) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number must be exactly 10 digits"));
-            }
+        String phoneNumber = signUpRequest.getPhoneNumber();
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number is required"));
+        }
+        if (!phoneNumber.matches("^\\d{10}$")) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Phone Number must be exactly 10 digits"));
+        }
 
-            if (signUpRequest.getAddress() == null || signUpRequest.getAddress().trim().isEmpty()) {
-                return ResponseEntity.badRequest().body(new MessageResponse("Error: Address is required for Contractors"));
-            }
+        if (signUpRequest.getAddress() == null || signUpRequest.getAddress().trim().isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Address is required"));
         }
 
         if (!captchaService.validateCaptcha(signUpRequest.getCaptchaId(), signUpRequest.getCaptchaAnswer())) {
@@ -135,6 +134,11 @@ public class AuthController {
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
+
+        // maximize data capture for all roles
+        user.setFullName(signUpRequest.getFullName());
+        user.setPhoneNumber(signUpRequest.getPhoneNumber());
+        user.setAddress(signUpRequest.getAddress());
 
         // Default role is Citizen, or use request role if valid
         if (signUpRequest.getRole() != null) {
