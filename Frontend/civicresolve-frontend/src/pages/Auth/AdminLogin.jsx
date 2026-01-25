@@ -78,6 +78,12 @@ const AdminLogin = () => {
           transition={{ duration: 0.5 }}
         >
           <Card className="glass-card border-0 rounded-4 overflow-hidden text-dark shadow-lg">
+            <div
+              style={{
+                height: "6px",
+                background: "linear-gradient(90deg, #3b82f6, #10b981)",
+              }}
+            ></div>
             <Card.Body className="p-4 p-md-5">
               <div className="text-center mb-4">
                 <div className="mb-3 text-warning">

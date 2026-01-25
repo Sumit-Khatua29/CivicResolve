@@ -69,16 +69,22 @@ const ContractorLogin = () => {
       {/* Dark Teal Overlay */}
       <div className="contractor-auth-overlay"></div>
 
-      <Container className="contractor-login-form-container">
+      <Container style={{ position: "relative", zIndex: 2, maxWidth: "400px" }}>
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
           <Card className="glass-card border-0 rounded-4 overflow-hidden text-dark shadow-lg">
+            <div
+              style={{
+                height: "6px",
+                background: "linear-gradient(90deg, #3b82f6, #10b981)",
+              }}
+            ></div>
             <Card.Body className="p-4 p-md-5">
               <div className="text-center mb-4">
-                <div className="mb-3 text-info">
+                <div className="mb-3 text-warning">
                   <FaHardHat size={40} />
                 </div>
                 <h2 className="fw-bold mb-1">Contractor Portal</h2>
@@ -100,7 +106,7 @@ const ContractorLogin = () => {
                     Username
                   </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text className="bg-white text-info border-end-0">
+                    <InputGroup.Text className="bg-white text-primary border-end-0">
                       <FaUser />
                     </InputGroup.Text>
                     <Form.Control
@@ -119,7 +125,7 @@ const ContractorLogin = () => {
                     Password
                   </Form.Label>
                   <InputGroup>
-                    <InputGroup.Text className="bg-white text-info border-end-0">
+                    <InputGroup.Text className="bg-white text-primary border-end-0">
                       <FaLock />
                     </InputGroup.Text>
                     <Form.Control
@@ -132,7 +138,8 @@ const ContractorLogin = () => {
                     />
                     <InputGroup.Text
                       onClick={() => setShowPassword(!showPassword)}
-                      className="bg-white text-muted border-start-0 cursor-pointer"
+                      className="bg-white text-muted border-start-0"
+                      style={{ cursor: "pointer" }}
                     >
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </InputGroup.Text>
@@ -140,9 +147,9 @@ const ContractorLogin = () => {
                 </Form.Group>
 
                 <Button
-                  variant="info"
+                  variant="warning"
                   type="submit"
-                  className="w-100 btn-info text-white rounded-pill fw-bold shadow"
+                  className="w-100 btn-primary-custom text-white rounded-pill fw-bold shadow"
                 >
                   Login to Dashboard
                 </Button>
