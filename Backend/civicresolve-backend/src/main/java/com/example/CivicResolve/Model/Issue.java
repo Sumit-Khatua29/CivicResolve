@@ -46,6 +46,7 @@ public class Issue {
     private Double longitude;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(name = "image_data", columnDefinition = "LONGBLOB")
     private byte[] imageData;
 
@@ -54,12 +55,14 @@ public class Issue {
     private String imageName;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "LONGBLOB")
     private byte[] beforeImageData;
     private String beforeImageType;
     private String beforeImageName;
 
     @Lob
+    @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "LONGBLOB")
     private byte[] afterImageData;
     private String afterImageType;

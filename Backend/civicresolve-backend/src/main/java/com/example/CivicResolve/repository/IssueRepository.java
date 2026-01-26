@@ -12,11 +12,13 @@ import java.util.List;
 
 @Repository
 public interface IssueRepository extends JpaRepository<Issue, Long> {
-    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user"})
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user", "contractor"})
     List<Issue> findAll();
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"contractor"})
     List<Issue> findByUser(Users user);
 
+    @org.springframework.data.jpa.repository.EntityGraph(attributePaths = {"user"})
     List<Issue> findByContractor(Contractor contractor);
 
     @Query("Select new com.example.CivicResolve.dto.CategoryCount(i.category, COUNT(i)) from Issue i group by i.category")
