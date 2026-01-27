@@ -58,6 +58,9 @@ public class IssueService {
         Issue issue = new Issue();
         issue.setDescription(description);
         issue.setAddress(address);
+        if (!pincode.matches("^[1-9][0-9]{5}$")) {
+            throw new IllegalArgumentException("Pincode must be 6 digits and cannot start with 0");
+        }
         issue.setPincode(pincode);
 
         if (image != null && !image.isEmpty()) {
@@ -108,6 +111,9 @@ public class IssueService {
 
         issue.setDescription(description);
         issue.setAddress(address);
+        if (!pincode.matches("^[1-9][0-9]{5}$")) {
+            throw new IllegalArgumentException("Pincode must be 6 digits and cannot start with 0");
+        }
         issue.setPincode(pincode);
         issue.setCategory(category);
         issue.setLatitude(latitude);

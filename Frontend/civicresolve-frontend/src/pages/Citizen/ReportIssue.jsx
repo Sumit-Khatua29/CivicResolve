@@ -34,6 +34,7 @@ const ReportIssue = () => {
   const [loading, setLoading] = useState(false);
   const [isLocating, setIsLocating] = useState(false);
   const [showInfoWindow, setShowInfoWindow] = useState(true);
+  const [pincodeVerified, setPincodeVerified] = useState(false);
 
   // Map State
   const [map, setMap] = useState(null);
@@ -127,6 +128,7 @@ const ReportIssue = () => {
       setDescription(issue.description);
       setAddress(issue.address || "");
       setPincode(issue.pincode || "");
+      if (issue.pincode) setPincodeVerified(true);
       setCategory(issue.category);
       if (issue.category === "OTHER") {
         setOtherCategory(issue.otherCategory || "");
@@ -191,9 +193,14 @@ const ReportIssue = () => {
       return;
     }
 
-    if (!pincode || !/^\d{6}$/.test(pincode)) {
-      setError("Please enter a valid 6-digit Area Code / Pincode.");
+    if (!pincode || !/^[1-9][0-9]{5}$/.test(pincode)) {
+      setError("Please enter a valid 6-digit Pincode (cannot start with 0).");
       return;
+    }
+
+    if (!pincodeVerified) {
+        setError("Pincode is not verified. Please check the pincode and wait for validation success.");
+        return;
     }
 
     if (!latitude || !longitude) {
@@ -272,9 +279,21 @@ const ReportIssue = () => {
                 rows={3}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                onBlur={() => {
+                  if (description.trim().length > 0 && description.trim().length < 10) {
+                     setError("Description must be at least 10 characters long.");
+                  } else {
+                     if (error.includes("Description")) setError("");
+                  }
+                }}
                 required
                 placeholder="Describe the issue clearly (min 10 chars)..."
               />
+              {error && error.includes("Description") && (
+                <div className="text-danger mt-1">
+                  <small>{error}</small>
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -283,10 +302,22 @@ const ReportIssue = () => {
                 type="text"
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
+                onBlur={() => {
+                   if (!address.trim()) {
+                      setError("Address is required.");
+                   } else {
+                      if (error.includes("Address")) setError("");
+                   }
+                }}
                 required
                 maxLength={500}
                 placeholder="Enter location address"
               />
+              {error && error.includes("Address") && (
+                <div className="text-danger mt-1">
+                  <small>{error}</small>
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -296,13 +327,51 @@ const ReportIssue = () => {
                 value={pincode}
                 onChange={(e) => {
                   const val = e.target.value;
+                  // Allow only digits, no spaces, max 6 chars
                   if (/^\d*$/.test(val) && val.length <= 6) {
                     setPincode(val);
+                    setPincodeVerified(false); // Reset verification on change
+                    // Clear API error if user is typing
+                    if (error.includes("Pincode")) setError("");
                   }
+                }}
+                onBlur={async () => {
+                   if (pincode.length === 6) {
+                       if (pincode.startsWith('0')) {
+                           setError("Pincode cannot start with 0.");
+                           return;
+                       }
+                       // API Validation
+                       try {
+                           const res = await fetch(`https://api.postalpincode.in/pincode/${pincode}`);
+                           const data = await res.json();
+                           if (data && data[0] && data[0].Status === "Success") {
+                               setSuccess("Pincode verified via API.");
+                               setPincodeVerified(true);
+                               setTimeout(() => setSuccess(""), 3000);
+                           } else {
+                               setError("Invalid Pincode (not found in database).");
+                               setPincodeVerified(false);
+                           }
+                       } catch (err) {
+                           console.error("Pincode API Error", err);
+                           // If API is down, maybe allow?
+                           // For now, let's be strict or user can't submit 111111
+                           setError("Could not verify pincode. Please try again."); 
+                           setPincodeVerified(false);
+                       }
+                   } else if (pincode.length > 0) {
+                      setError("Pincode must be exactly 6 digits.");
+                   }
                 }}
                 required
                 placeholder="Enter 6-digit Pincode"
               />
+              {error && (error.includes("Pincode") || error.includes("verified")) && (
+                <div className="text-danger mt-1">
+                  <small>{error}</small>
+                </div>
+              )}
             </Form.Group>
 
             <Form.Group className="mb-3">
@@ -331,9 +400,21 @@ const ReportIssue = () => {
                   type="text"
                   value={otherCategory}
                   onChange={(e) => setOtherCategory(e.target.value)}
+                  onBlur={() => {
+                      if (!otherCategory.trim()) {
+                          setError("Please specify the category.");
+                      } else {
+                          if (error.includes("category")) setError("");
+                      }
+                  }}
                   required
-                  placeholder="Please specify..."
+                  placeholder="Enter category name"
                 />
+                {error && error.includes("category") && (
+                  <div className="text-danger mt-1">
+                    <small>{error}</small>
+                  </div>
+                )}
               </Form.Group>
             )}
 

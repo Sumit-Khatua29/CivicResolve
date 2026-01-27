@@ -203,4 +203,25 @@ public class EmailService {
             System.err.println("Error sending resolved email with attachment: " + e.getMessage());
         }
     }
+
+
+    @org.springframework.scheduling.annotation.Async
+    public void sendPasswordResetEmail(String toEmail, String token) {
+        System.out.println("EmailService: sendPasswordResetEmail running in thread: " + Thread.currentThread().getName());
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("civicresolve5@gmail.com");
+        message.setTo(toEmail);
+        message.setSubject("Password Reset Request - Civic Resolve");
+        message.setText("Dear User,\n\n" +
+                "You have requested to reset your password. Please click the link below to reset it:\n" +
+                "http://localhost:5173/reset-password?token=" + token + "\n\n" +
+                "This link will expire in 15 minutes.\n\n" +
+                "If you did not request this, please ignore this email.\n\n" +
+                "Sincerely,\n" +
+                "The Civic Resolve Team");
+
+        System.out.println("Attempting to send password reset email to: " + toEmail);
+        mailSender.send(message);
+        System.out.println("Password reset email sent successfully to: " + toEmail);
+    }
 }

@@ -29,7 +29,7 @@ public class Issue {
 
     @Column(length = 10)
     @jakarta.validation.constraints.NotBlank(message = "Pincode is required")
-    @jakarta.validation.constraints.Pattern(regexp = "^\\d{6}$", message = "Pincode must be 6 digits")
+    @jakarta.validation.constraints.Pattern(regexp = "^[1-9][0-9]{5}$", message = "Pincode must be 6 digits and cannot start with 0")
     private String pincode;
 
     @Enumerated(EnumType.STRING)

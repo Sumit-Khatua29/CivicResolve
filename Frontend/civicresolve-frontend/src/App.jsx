@@ -17,6 +17,8 @@ const Login = lazy(() => import("./pages/Auth/Login"));
 const Register = lazy(() => import("./pages/Auth/Register"));
 const AdminLogin = lazy(() => import("./pages/Auth/AdminLogin"));
 const ContractorLogin = lazy(() => import("./pages/Auth/ContractorLogin"));
+const ForgotPassword = lazy(() => import("./pages/Auth/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/Auth/ResetPassword"));
 const Home = lazy(() => import("./pages/Home"));
 const AdminDashboard = lazy(() => import("./pages/Admin/AdminDashboard"));
 const IssueList = lazy(() => import("./pages/Admin/IssueList"));
@@ -66,6 +68,8 @@ function App() {
                     element={<ContractorLogin />}
                   />
                   <Route path="/register" element={<Register />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
                   <Route path="/contact" element={<ContactUs />} />
                   <Route path="/about" element={<AboutUs />} />
 

@@ -25,6 +25,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -157,10 +158,15 @@ public class AuthController {
         userRepository.save(user);
 
         if (user.getRole() == Role.ROLE_CONTRACTOR) {
+            String area = signUpRequest.getAssignedArea();
+            if (area == null || !area.matches("^[1-9][0-9]{5}$")) {
+                 userRepository.delete(user); // Rollback user creation
+                 return ResponseEntity.badRequest().body(new MessageResponse("Error: Assigned Area must be a valid 6-digit Pincode (cannot start with 0)"));
+            }
+
             com.example.CivicResolve.Model.Contractor contractor = new com.example.CivicResolve.Model.Contractor();
             contractor.setUser(user);
-            contractor.setAssignedArea(
-                    signUpRequest.getAssignedArea() != null ? signUpRequest.getAssignedArea() : "Unassigned");
+            contractor.setAssignedArea(area);
 
             // Save personal details to Contractor table
             contractor.setFullName(signUpRequest.getFullName());
@@ -262,6 +268,80 @@ public class AuthController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(new MessageResponse("Google Login Failed: " + e.getMessage()));
         }
+    }
+
+
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> payload) {
+        String email = payload.get("email");
+        if (email == null || email.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email is required"));
+        }
+
+        Users user = userRepository.findByEmail(email).orElse(null);
+        if (user == null) {
+            // To prevent user enumeration, we can return OK even if user not found, 
+            // but for this project context, explicit error might be preferred by user. 
+            // I'll return bad request for now as it's easier for them to debug.
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: User with this email does not exist."));
+        }
+
+        String token = UUID.randomUUID().toString();
+        user.setResetToken(token);
+        // Expiry 15 minutes from now
+        user.setResetTokenExpiry(java.time.LocalDateTime.now().plusMinutes(15));
+        try {
+            userRepository.save(user);
+        } catch (Exception e) {
+            System.err.println("Error saving user with reset token: " + e.getMessage());
+            e.printStackTrace();
+            if (e instanceof org.springframework.transaction.TransactionSystemException) {
+                 Throwable cause = e.getCause();
+                 while (cause != null) {
+                     System.err.println("Cause: " + cause.getMessage());
+                     cause = cause.getCause();
+                 }
+            }
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Could not commit JPA transaction. Check logs for validation errors."));
+        }
+
+        emailService.sendPasswordResetEmail(user.getEmail(), token);
+
+        return ResponseEntity.ok(new MessageResponse("Password reset email sent!"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> payload) {
+        String token = payload.get("token");
+        String newPassword = payload.get("newPassword");
+
+        if (token == null || newPassword == null) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Token and New Password are required"));
+        }
+
+        Optional<Users> userOpt = userRepository.findByResetToken(token);
+        if (userOpt.isEmpty()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid token"));
+        }
+
+        Users user = userOpt.get();
+
+        if (user.getResetTokenExpiry() == null || user.getResetTokenExpiry().isBefore(java.time.LocalDateTime.now())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Token has expired"));
+        }
+
+        // Validate password strength here if needed, or rely on frontend validation + common sense
+        if (newPassword.length() < 6) {
+             return ResponseEntity.badRequest().body(new MessageResponse("Error: Password must be at least 6 characters"));
+        }
+
+        user.setPassword(encoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("Password successfully reset! You can now login."));
     }
 
 }

@@ -45,6 +45,7 @@ const Register = () => {
   const [fullName, setFullName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
+  const [areaVerified, setAreaVerified] = useState(false); // NEW State
 
   React.useEffect(() => {
     fetchCaptcha();
@@ -74,7 +75,13 @@ const Register = () => {
     try {
       let roleEnum = "ROLE_CITIZEN";
       if (role === "admin") roleEnum = "ROLE_ADMIN";
-      else if (role === "contractor") roleEnum = "ROLE_CONTRACTOR";
+      else if (role === "contractor") {
+        roleEnum = "ROLE_CONTRACTOR";
+        if (!areaVerified) {
+          setError("Assigned Area (Pincode) is not verified. Please check and wait for validation.");
+          return;
+        }
+      }
 
       await register(
         username,
@@ -159,6 +166,13 @@ const Register = () => {
                       onChange={(e) => setUsername(e.target.value)}
                       required
                       className="py-2 border-start-0 bg-light auth-input-control"
+                      onBlur={() => {
+                          if (username.trim().length < 3) {
+                              setError("Username must be at least 3 characters.");
+                          } else {
+                              if (error.includes("Username")) setError("");
+                          }
+                      }}
                     />
                   </InputGroup>
                 </Form.Group>
@@ -178,6 +192,13 @@ const Register = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       className="py-2 border-start-0 bg-light auth-input-control"
+                      onBlur={() => {
+                          if (email && !/^\S+@\S+\.\S+$/.test(email)) {
+                              setError("Please enter a valid email address.");
+                          } else {
+                              if (error.includes("email")) setError("");
+                          }
+                      }}
                     />
                   </InputGroup>
                 </Form.Group>
@@ -199,6 +220,11 @@ const Register = () => {
                           onChange={(e) => setPassword(e.target.value)}
                           required
                           className="py-2 border-start-0 bg-light auth-input-control"
+                          onBlur={() => {
+                              if (password.length > 0 && password.length < 6) {
+                                  setError("Password must be at least 6 characters.");
+                              }
+                          }}
                         />
                       </InputGroup>
                     </Form.Group>
@@ -222,6 +248,13 @@ const Register = () => {
                           onChange={(e) => setConfirmPassword(e.target.value)}
                           required
                           className="py-2 border-start-0 bg-light auth-input-control"
+                          onBlur={() => {
+                              if (confirmPassword && confirmPassword !== password) {
+                                  setError("Passwords do not match.");
+                              } else {
+                                  if (error.includes("Passwords")) setError("");
+                              }
+                          }}
                         />
                       </InputGroup>
                     </Form.Group>
@@ -281,7 +314,38 @@ const Register = () => {
                         type="text"
                         placeholder="Enter Pincode"
                         value={assignedArea}
-                        onChange={(e) => setAssignedArea(e.target.value)}
+                        onChange={(e) => {
+                            const val = e.target.value;
+                            if (/^\d*$/.test(val) && val.length <= 6) {
+                                setAssignedArea(val);
+                                setAreaVerified(false);
+                            }
+                        }}
+                        onBlur={async () => {
+                            if (assignedArea) {
+                                if (!/^[1-9][0-9]{5}$/.test(assignedArea)) {
+                                    setError("Assigned Area must be a valid 6-digit Pincode (cannot start with 0)");
+                                    return;
+                                }
+
+                                try {
+                                    const res = await fetch(`https://api.postalpincode.in/pincode/${assignedArea}`);
+                                    const data = await res.json();
+                                    if (data && data[0] && data[0].Status === "Success") {
+                                        // Valid pincode
+                                        if (error.includes("Assigned Area") || error.includes("Pincode")) setError("");
+                                        setAreaVerified(true);
+                                    } else {
+                                        setError("Invalid Assigned Area Pincode (not found in database)");
+                                        setAreaVerified(false);
+                                    }
+                                } catch (err) {
+                                    console.error("Pincode API Error", err);
+                                    setAreaVerified(false);
+                                    setError("Could not verify area code. Please try again.");
+                                }
+                            }
+                        }}
                         required
                         className="py-2 border-start-0 bg-light auth-input-control"
                       />
@@ -323,6 +387,13 @@ const Register = () => {
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       required
                       className="py-2 border-start-0 bg-light auth-input-control"
+                      onBlur={() => {
+                          if (phoneNumber && !/^\d{10}$/.test(phoneNumber)) {
+                              setError("Phone Number must be exactly 10 digits.");
+                          } else {
+                              if (error.includes("Phone")) setError("");
+                          }
+                      }}
                     />
                   </InputGroup>
                 </Form.Group>
@@ -343,6 +414,13 @@ const Register = () => {
                       onChange={(e) => setAddress(e.target.value)}
                       required
                       className="py-2 border-start-0 bg-light auth-input-control"
+                      onBlur={() => {
+                          if (address.trim().length === 0) {
+                              setError("Address is required.");
+                          } else {
+                              if (error.includes("Address")) setError("");
+                          }
+                      }}
                     />
                   </InputGroup>
                 </Form.Group>

@@ -147,6 +147,12 @@ const AdminLogin = () => {
                     </InputGroup.Text>
                   </InputGroup>
                 </Form.Group>
+                
+                <div className="d-flex justify-content-end mb-4">
+                  <Link to="/forgot-password" className="text-decoration-none small text-muted hover-text-primary">
+                    Forgot Password?
+                  </Link>
+                </div>
 
                 <Button
                   variant="warning"

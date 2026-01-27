@@ -139,7 +139,10 @@ const Login = () => {
                   </InputGroup>
                 </Form.Group>
 
-                <div className="mb-4 text-end">
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                  <Link to="/forgot-password" className="text-decoration-none small text-muted hover-text-primary">
+                    Forgot Password?
+                  </Link>
                   <Button
                     variant="link"
                     onClick={() => setShowPassword(!showPassword)}

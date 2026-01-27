@@ -30,3 +30,8 @@
 .admin-auth-input-control {
     border-left: none;
 }
+
+.hover-text-primary:hover {
+    color: #3b82f6 !important;
+    transition: color 0.2s;
+}

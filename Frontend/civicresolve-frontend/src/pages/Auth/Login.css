@@ -72,3 +72,8 @@
     background-color: #fff !important;
     border-color: #dee2e6;
 }
+
+.hover-text-primary:hover {
+    color: #3b82f6 !important;
+    transition: color 0.2s;
+}
