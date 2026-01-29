@@ -28,6 +28,7 @@ const Login = () => {
   const googleLoginHelper = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       try {
+        console.log("Google Login Success, Token:", tokenResponse);
         const user = await googleLogin(tokenResponse.access_token);
         if (user.role === "ROLE_ADMIN") {
           logout();
@@ -39,10 +40,14 @@ const Login = () => {
         }
         navigate("/");
       } catch (err) {
-        setError("Google Login failed.");
+        console.error("Google Login Verification/Backend Error:", err);
+        setError("Google Login failed (Backend). Check console.");
       }
     },
-    onError: () => setError("Google Login failed."),
+    onError: (errorResponse) => {
+        console.error("Google Login Popup/OAuth Error:", errorResponse);
+        setError("Google Login failed (OAuth). Check console.");
+    },
   });
 
   const handleSubmit = async (e) => {
