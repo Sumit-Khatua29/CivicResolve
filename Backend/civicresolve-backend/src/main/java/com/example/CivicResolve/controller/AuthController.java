@@ -3,6 +3,7 @@ package com.example.CivicResolve.controller;
 import com.example.CivicResolve.Model.Role;
 import com.example.CivicResolve.Model.Users;
 import com.example.CivicResolve.dto.*;
+import com.example.CivicResolve.repository.ContractorRepository;
 import com.example.CivicResolve.repository.UserRepository;
 import com.example.CivicResolve.security.JwtUtils;
 import com.example.CivicResolve.security.UserDetailsImpl;
@@ -39,7 +40,7 @@ public class AuthController {
     UserRepository userRepository;
 
     @Autowired
-    private com.example.CivicResolve.repository.ContractorRepository contractorRepository;
+    ContractorRepository contractorRepository;
 
     @Autowired
     PasswordEncoder encoder;
@@ -321,7 +322,7 @@ public class AuthController {
         }
 
         Optional<Users> userOpt = userRepository.findByResetToken(token);
-        if (userOpt.isEmpty()) {
+       if (userOpt.isEmpty()) {
             return ResponseEntity.badRequest().body(new MessageResponse("Error: Invalid token"));
         }
 
