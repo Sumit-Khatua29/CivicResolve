@@ -62,15 +62,13 @@ public class WebSecurityConfig {
                 }))
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/test/**").permitAll()
-                                .requestMatchers("/api/issues/*/image").permitAll()
-                                .requestMatchers("/api/issues/*/image/before").permitAll()
-                                .requestMatchers("/api/issues/*/image/after").permitAll()
-                                .requestMatchers("/error").permitAll()
-                                .requestMatchers("/api/feedback/**").permitAll()
-                                .anyRequest().authenticated()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/**").permitAll() // Allow public access to auth endpoints
+                        .requestMatchers("/api/test/**").permitAll() // Allow public access to test endpoints
+                        .requestMatchers("/api/users/profile").authenticated()
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN") // Restrict admin routes
+                        .requestMatchers("/api/contractor/**").hasRole("CONTRACTOR") // Restrict contractor routes
+                        .anyRequest().authenticated() // All other requests require authentication
                 );
 
         http.authenticationProvider(authenticationProvider());
