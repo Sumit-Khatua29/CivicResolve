@@ -10,6 +10,14 @@ It's a comprehensive platform built to bridge the gap between residents and loca
 
 ---
 
+## 🚀 Live Demo
+
+Check out the live application:
+
+*   **Frontend (Vercel):** [https://civic-resolve-nx9n.vercel.app](https://civic-resolve-nx9n.vercel.app)
+*   **Backend API (Render):** [https://civicresole-backend-api.onrender.com](https://civicresole-backend-api.onrender.com)
+    *   *Note: This is the API base URL. Direct access might show a 404 or white label error page unless hitting a valid endpoint like `/api/test/ping` (if available).*
+
 ## 🌟 Key Features
 
 ### 👤 For Citizens
