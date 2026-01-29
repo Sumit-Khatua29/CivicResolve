@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -40,6 +39,59 @@ public class UserController {
                 user.getPhoneNumber(),
                 user.getAddress(),
                 user.getRole().name()));
+    }
+
+    @PutMapping("/profile")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<?> updateProfile(
+            @org.springframework.web.bind.annotation.RequestBody com.example.CivicResolve.dto.ProfileRequest profileRequest,
+            java.security.Principal principal) {
+        
+        try {
+            System.out.println("Received Profile Update Request: " + profileRequest); // Log incoming data
+
+            Users user = userRepository.findByUsername(principal.getName())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            if (profileRequest.getFullName() != null) {
+                user.setFullName(profileRequest.getFullName());
+            }
+            if (profileRequest.getPhoneNumber() != null) {
+                user.setPhoneNumber(profileRequest.getPhoneNumber());
+            }
+            if (profileRequest.getAddress() != null) {
+                user.setAddress(profileRequest.getAddress());
+            }
+
+            userRepository.save(user); // Save User
+            
+            // Also update Contractor details if user is a contractor
+            if (user.getRole() == com.example.CivicResolve.Model.Role.ROLE_CONTRACTOR) {
+                java.util.Optional<com.example.CivicResolve.Model.Contractor> contractorOpt = contractorRepository.findByUser(user);
+                if (contractorOpt.isPresent()) {
+                    com.example.CivicResolve.Model.Contractor contractor = contractorOpt.get();
+                    if (profileRequest.getFullName() != null) contractor.setFullName(profileRequest.getFullName());
+                    if (profileRequest.getPhoneNumber() != null) contractor.setPhoneNumber(profileRequest.getPhoneNumber());
+                    if (profileRequest.getAddress() != null) contractor.setAddress(profileRequest.getAddress());
+                    contractorRepository.save(contractor); // Save Contractor checking constraints
+                }
+            }
+
+            return ResponseEntity.ok(new UserProfileResponse(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getEmail(),
+                    user.getFullName(),
+                    user.getPhoneNumber(),
+                    user.getAddress(),
+                    user.getRole().name()));
+
+        } catch (Exception e) {
+            System.err.println("ERROR UPDATING PROFILE for " + principal.getName() + ": " + e.getMessage());
+            e.printStackTrace(); // Print full stack trace to logs
+            return ResponseEntity.status(org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error updating profile: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}/block")

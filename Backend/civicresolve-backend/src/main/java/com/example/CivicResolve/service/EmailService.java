@@ -37,7 +37,13 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Welcome email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING WELCOME EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /* ===================== ISSUE REJECTED ===================== */
@@ -56,7 +62,13 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Issue Rejected email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING ISSUE REJECTED EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /* ===================== CONTRACTOR APPROVED ===================== */
@@ -75,7 +87,13 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Contractor Approved email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING CONTRACTOR APPROVED EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /* ===================== CONTRACTOR REJECTED ===================== */
@@ -94,7 +112,13 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Contractor Rejected email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING CONTRACTOR REJECTED EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /* ===================== ISSUE REASSIGNED ===================== */
@@ -119,7 +143,13 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Issue Reassigned email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING ISSUE REASSIGNED EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     /* ===================== ISSUE REPORTED (WITH IMAGE) ===================== */
@@ -157,6 +187,7 @@ public class EmailService {
 
             mailSender.send(message);
         } catch (MessagingException e) {
+            System.err.println("ERROR SENDING ISSUE REPORT EMAIL to " + toEmail + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -205,6 +236,7 @@ public class EmailService {
 
             mailSender.send(message);
         } catch (MessagingException e) {
+            System.err.println("ERROR SENDING ISSUE RESOLVED EMAIL to " + toEmail + ": " + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -226,6 +258,12 @@ public class EmailService {
                         "The Civic Resolve Team"
         );
 
-        mailSender.send(message);
+        try {
+            mailSender.send(message);
+            System.out.println("Password reset email sent successfully to: " + toEmail);
+        } catch (Exception e) {
+            System.err.println("ERROR SENDING PASSWORD RESET EMAIL to " + toEmail + ": " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
