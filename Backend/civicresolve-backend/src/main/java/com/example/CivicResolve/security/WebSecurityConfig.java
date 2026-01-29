@@ -54,7 +54,7 @@ public class WebSecurityConfig {
         http.csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5174", "https://civicresole-backend-api.onrender.com")); // Allow frontend variants
+                    corsConfiguration.setAllowedOrigins(java.util.List.of("http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173", "http://localhost:5174", "https://civicresole-backend-api.onrender.com", "https://civic-resolve-nx9n.vercel.app")); // Allow frontend variants
                     corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                     corsConfiguration.setAllowCredentials(true);
