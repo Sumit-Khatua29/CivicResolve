@@ -42,4 +42,30 @@ public class TestController {
     public ResponseEntity<String> ping() {
         return ResponseEntity.ok("Pong! Backend is reachable.");
     }
+
+    @GetMapping("/network")
+    public ResponseEntity<String> testNetwork() {
+        StringBuilder result = new StringBuilder();
+        result.append("NETWORK DIAGNOSTIC REPORT:\n");
+
+        // Test Port 587
+        try (java.net.Socket socket = new java.net.Socket()) {
+            result.append("Connecting to smtp.gmail.com:587... ");
+            socket.connect(new java.net.InetSocketAddress("smtp.gmail.com", 587), 5000);
+            result.append("SUCCESS. Connected.\n");
+        } catch (Exception e) {
+            result.append("FAILED. ").append(e.getClass().getSimpleName()).append(": ").append(e.getMessage()).append("\n");
+        }
+
+        // Test Port 465
+        try (java.net.Socket socket = new java.net.Socket()) {
+            result.append("Connecting to smtp.gmail.com:465... ");
+            socket.connect(new java.net.InetSocketAddress("smtp.gmail.com", 465), 5000);
+            result.append("SUCCESS. Connected.\n");
+        } catch (Exception e) {
+            result.append("FAILED. ").append(e.getClass().getSimpleName()).append(": ").append(e.getMessage()).append("\n");
+        }
+
+        return ResponseEntity.ok(result.toString());
+    }
 }
