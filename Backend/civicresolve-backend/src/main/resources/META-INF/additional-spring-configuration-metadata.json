@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "frontend.url",
+    "type": "java.lang.String",
+    "description": "URL of the frontend application."
+  },
+  {
+    "name": "jwtSecret",
+    "type": "java.lang.String",
+    "description": "Secret key used for signing JWTs."
+  },
+  {
+    "name": "jwtExpirationMs",
+    "type": "java.lang.Integer",
+    "description": "JWT expiration time in milliseconds."
+  }
+]}
